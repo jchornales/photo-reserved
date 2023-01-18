@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { userSchema } from '../../config/Validations/initialize';
 import { FormData } from '../../config/Types/initialize';
-import createUser from '../../config/Firebase/createUser';
+import createUser from '../../config/Firebase/authentication';
 
 export default function SignUp() {
   const {
