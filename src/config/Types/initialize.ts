@@ -14,3 +14,8 @@ export type FormData = {
   address: string;
   phone: string;
 };
+
+export type SignInForm = {
+  email: string;
+  password: string;
+};
