@@ -1,11 +1,9 @@
-import SignIn from './components/SignIn';
-import SignUp from './components/SignUp';
+import { Link } from 'react-router-dom';
 
 function App() {
   return (
     <div className="App">
-      <SignUp />
-      <SignIn />
+      <Link to="/login">Login</Link>
     </div>
   );
 }
