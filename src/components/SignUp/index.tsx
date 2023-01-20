@@ -2,11 +2,10 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable no-console */
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { userSchema } from '../../config/Validations/initialize';
 import { FormData, Geolocation } from '../../config/Types/initialize';
-import createUser from '../../config/Firebase/authentication';
 import GetProvinces from '../../api/GetPMCB';
 
 export default function SignUp() {
@@ -15,28 +14,23 @@ export default function SignUp() {
     register,
     formState: { errors },
   } = useForm<FormData>({
-    resolver: yupResolver(userSchema),
-    mode: 'onChange',
-  });
-
-  const onSubmit = handleSubmit((data) => {
-    if (userSchema.isValidSync(data)) {
-      createUser(data);
-    }
+    resolver: zodResolver(userSchema),
   });
 
   const provinces = GetProvinces();
   const provinceRegister = register('province');
 
+  const onSubmit: SubmitHandler<FormData> = (data) => console.log(data);
+
   return (
-    <form onSubmit={onSubmit}>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <label htmlFor="first_name">First Name</label>
       <input {...register('first_name')} />
-      <p>{errors.first_name?.message}</p>
+      {errors.first_name?.message && <span>{errors.first_name?.message}</span>}
 
       <label htmlFor="last_name">Last Name</label>
       <input {...register('last_name')} />
-      <p>{errors.last_name?.message}</p>
+      {errors.last_name?.message && <span>{errors.last_name?.message}</span>}
 
       <label htmlFor="province">Province</label>
       <select
@@ -59,35 +53,37 @@ export default function SignUp() {
             );
           })}
       </select>
-      <p>{errors.province?.message}</p>
+      {errors.province?.message && <span>{errors.province?.message}</span>}
 
       <label htmlFor="city">City</label>
       <input {...register('city')} />
-      <p>{errors.city?.message}</p>
+      {errors.city?.message && <span>{errors.city?.message}</span>}
 
       <label htmlFor="barangay">Barangay</label>
       <input {...register('barangay')} />
-      <p>{errors.barangay?.message}</p>
+      {errors.barangay?.message && <span>{errors.barangay?.message}</span>}
 
       <label htmlFor="address">address</label>
       <input {...register('address')} />
-      <p>{errors.address?.message}</p>
+      {errors.address?.message && <span>{errors.address?.message}</span>}
 
       <label htmlFor="phone">phone</label>
       <input {...register('phone')} />
-      <p>{errors.phone?.message}</p>
+      {errors.phone?.message && <span>{errors.phone?.message}</span>}
 
       <label htmlFor="email">Email</label>
       <input {...register('email')} />
-      <p>{errors.email?.message}</p>
+      {errors.email?.message && <span>{errors.email?.message}</span>}
 
       <label htmlFor="password">Password</label>
       <input type="password" {...register('password')} />
-      <p>{errors.password?.message}</p>
+      {errors.password?.message && <span>{errors.password?.message}</span>}
 
       <label htmlFor="password">Confirm Password</label>
       <input type="password" {...register('passwordConfirmation')} />
-      <p>{errors.passwordConfirmation?.message}</p>
+      {errors.passwordConfirmation?.message && (
+        <span>{errors.passwordConfirmation?.message}</span>
+      )}
 
       <button type="submit">SetValue</button>
     </form>

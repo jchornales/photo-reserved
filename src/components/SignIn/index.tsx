@@ -1,10 +1,10 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable react/jsx-props-no-spreading */
-import { yupResolver } from '@hookform/resolvers/yup';
-import { useForm } from 'react-hook-form';
-import { signInUser } from '../../config/Firebase/authentication';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import { SignInForm } from '../../config/Types/initialize';
 import { userSignInSchema } from '../../config/Validations/initialize';
+import { signInUser } from '../../config/Firebase/authentication';
 
 export default function SignIn() {
   const {
@@ -12,16 +12,13 @@ export default function SignIn() {
     register,
     formState: { errors },
   } = useForm<SignInForm>({
-    resolver: yupResolver(userSignInSchema),
+    resolver: zodResolver(userSignInSchema),
   });
 
-  const onSubmit = handleSubmit((data: SignInForm) => {
-    if (userSignInSchema.isValidSync(data)) {
-      signInUser(data);
-    }
-  });
+  const onSubmit: SubmitHandler<SignInForm> = (data) => signInUser(data);
+
   return (
-    <form onSubmit={onSubmit}>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <label htmlFor="email">Email</label>
       <input {...register('email')} />
       <p>{errors.email?.message}</p>

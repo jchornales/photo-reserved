@@ -1,22 +1,34 @@
 /* eslint-disable import/prefer-default-export */
-import * as yup from 'yup';
+import { z } from 'zod';
 
-export const userSchema = yup.object().shape({
-  first_name: yup.string().required('First Name is Required'),
-  last_name: yup.string().required('Last Name is Required'),
-  email: yup.string().email().required('Email is Required'),
-  address: yup.string(),
-  province: yup.string(),
-  city: yup.string(),
-  barangay: yup.string(),
-  phone: yup.string(),
-  password: yup.string().required().min(6),
-  passwordConfirmation: yup
+export const userSchema = z
+  .object({
+    first_name: z.string().min(1, 'First Name is required'),
+    last_name: z.string().min(1, 'Last Name is required'),
+    email: z
+      .string()
+      .min(1, 'Email is required')
+      .email({ message: 'Invalid email address' }),
+    province: z.string(),
+    city: z.string(),
+    barangay: z.string(),
+    address: z.string(),
+    phone: z.string(),
+    password: z
+      .string()
+      .min(6, { message: 'Password Must be more than 6 character' }),
+    passwordConfirmation: z
+      .string()
+      .min(6, { message: 'Password Must be more than 6 character' }),
+  })
+  .refine((data) => data.password === data.passwordConfirmation, {
+    message: "Password don't match",
+    path: ['passwordConfirmation'],
+  });
+
+export const userSignInSchema = z.object({
+  email: z.string().email({ message: 'Invalid email address' }),
+  password: z
     .string()
-    .oneOf([yup.ref('password'), null], 'Passwords must match'),
-});
-
-export const userSignInSchema = yup.object().shape({
-  email: yup.string().email().required('Email is Required'),
-  phone: yup.string(),
+    .min(6, { message: 'Password Must be more than 6 character' }),
 });

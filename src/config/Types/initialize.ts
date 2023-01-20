@@ -1,4 +1,6 @@
 import React from 'react';
+import { z } from 'zod';
+import { userSchema, userSignInSchema } from '../Validations/initialize';
 
 export type BaseLayout = {
   children?: React.ReactNode;
@@ -11,23 +13,9 @@ export type Customer = {
   phone: string;
 };
 
-export type FormData = {
-  first_name: string;
-  last_name: string;
-  email: string;
-  password: string;
-  passwordConfirmation: string;
-  address: string;
-  phone: string;
-  province: string;
-  city: string;
-  barangay: string;
-};
+export type FormData = z.infer<typeof userSchema>;
 
-export type SignInForm = {
-  email: string;
-  password: string;
-};
+export type SignInForm = z.infer<typeof userSignInSchema>;
 
 export type Geolocation = {
   code: string;

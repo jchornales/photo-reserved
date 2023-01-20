@@ -19,7 +19,7 @@
     "react-firebase-hooks": "^5.1.1",
     "react-hook-form": "^7.42.1",
     "react-router-dom": "^6.7.0",
-    "yup": "^0.32.11"
+    "zod": "^3.20.2"
   },
   "devDependencies": {
     "@types/react": "^18.0.26",
