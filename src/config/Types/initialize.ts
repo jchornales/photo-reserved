@@ -1,3 +1,9 @@
+import React from 'react';
+
+export type BaseLayout = {
+  children?: React.ReactNode;
+};
+
 export type Customer = {
   first_name: string;
   address: string;
@@ -13,9 +19,17 @@ export type FormData = {
   passwordConfirmation: string;
   address: string;
   phone: string;
+  province: string;
+  city: string;
+  barangay: string;
 };
 
 export type SignInForm = {
   email: string;
   password: string;
+};
+
+export type Geolocation = {
+  code: string;
+  name: string;
 };
