@@ -4,6 +4,7 @@ function App() {
   return (
     <div className="App">
       <Link to="/login">Login</Link>
+      <Link to="/signup">Sign up</Link>
     </div>
   );
 }

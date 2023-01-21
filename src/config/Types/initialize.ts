@@ -17,7 +17,19 @@ export type FormData = z.infer<typeof userSchema>;
 
 export type SignInForm = z.infer<typeof userSignInSchema>;
 
-export type Geolocation = {
+export type Province = {
   code: string;
   name: string;
+};
+
+export type City = {
+  code: string;
+  name: string;
+  provinceCode: string;
+};
+
+export type LocationForm = {
+  value: string;
+  label: string;
+  provinceCode?: string;
 };
