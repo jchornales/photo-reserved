@@ -9,7 +9,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@emotion/react": "^11.10.5",
     "@hookform/resolvers": "^2.9.10",
+    "@mantine/core": "^5.10.1",
+    "@mantine/form": "^5.10.1",
+    "@mantine/hooks": "^5.10.1",
     "@tanstack/react-query": "^4.22.0",
     "axios": "^1.2.3",
     "firebase": "^9.15.0",
