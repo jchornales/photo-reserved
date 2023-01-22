@@ -26,10 +26,29 @@ export type City = {
   code: string;
   name: string;
   provinceCode: string;
+  type: string;
 };
 
-export type LocationForm = {
+export type Barangay = {
+  code: string;
+  name: string;
+  cityCode: string;
+  municipalityCode: string;
+};
+
+export type ProvinceForm = {
   value: string;
   label: string;
-  provinceCode?: string;
+};
+
+export type CityForm = {
+  value: string;
+  label: string;
+  code: string;
+  type: string;
+};
+
+export type BarangayForm = {
+  value: string;
+  label: string;
 };
