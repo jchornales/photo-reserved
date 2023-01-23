@@ -1,19 +1,12 @@
 import React from 'react';
 import { z } from 'zod';
-import { userSchema, userSignInSchema } from '../Validations/initialize';
+import { userSignUpSchema, userSignInSchema } from '../Validations/initialize';
 
 export type BaseLayout = {
   children?: React.ReactNode;
 };
 
-export type Customer = {
-  first_name: string;
-  address: string;
-  last_name: string;
-  phone: string;
-};
-
-export type FormData = z.infer<typeof userSchema>;
+export type FormData = z.infer<typeof userSignUpSchema>;
 
 export type SignInForm = z.infer<typeof userSignInSchema>;
 

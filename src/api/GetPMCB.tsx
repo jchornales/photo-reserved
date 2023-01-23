@@ -17,7 +17,7 @@ async function fetchProvinces(): Promise<Province[]> {
   return data;
 }
 
-export async function fetchCities(code: string): Promise<City[]> {
+export async function fetchCities(code: string | null): Promise<City[]> {
   const cities = await axios
     .get(`https://psgc.gitlab.io/api/provinces/${code}/cities`)
     .then((response) => response.data);
@@ -81,7 +81,7 @@ export function GetProvinces(): ProvinceForm[] | undefined {
   }
 }
 
-export function GetCities(code: string): CityForm[] | undefined {
+export function GetCities(code: string | null): CityForm[] | undefined {
   const {
     data: cities,
     isSuccess,
