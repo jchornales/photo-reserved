@@ -8,6 +8,7 @@ import { useStepperFormStore } from '../../../config/StateManagement/initialize'
 import InfoField from './UserInfoFields';
 import UserAuth from './UserAuthFields';
 import AddressFields from './AddressFields';
+import { isEmailDuplicate } from '../../../config/Firebase/fetchData';
 
 export default function Form() {
   const form = useForm<FormData>({
@@ -20,14 +21,26 @@ export default function Form() {
     (state) => [state]
   );
 
-  const handleNext = async () => {
+  const handleNextStep = async () => {
     const passwordMatch =
       getValues('password') === getValues('passwordConfirmation');
     if (await trigger(target[active] as unknown as Path<FormData>)) {
-      if (passwordMatch) {
-        increaseStep();
+      const isEmailInvalid = await isEmailDuplicate(getValues('email'));
+      if (isEmailInvalid === false) {
+        if (!passwordMatch) {
+          setError('passwordConfirmation', {
+            message: "Password doesn't match",
+          });
+        }
+        if (passwordMatch) {
+          increaseStep();
+        }
       }
-      setError('passwordConfirmation', { message: "Password doesn't match" });
+      if (isEmailInvalid === true) {
+        setError('email', {
+          message: 'Email already exists! Please try again',
+        });
+      }
     }
   };
 
@@ -56,7 +69,7 @@ export default function Form() {
           {active === 2 ? (
             <Button type="submit">Sign up</Button>
           ) : (
-            <Button type="button" onClick={handleNext}>
+            <Button type="button" onClick={handleNextStep}>
               Next step
             </Button>
           )}
