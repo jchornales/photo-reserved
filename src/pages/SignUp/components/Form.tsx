@@ -44,14 +44,16 @@ export default function Form() {
           <Stepper.Step label="Final step" description="Get full access">
             <AddressFields form={form} />
           </Stepper.Step>
-          <Stepper.Completed>Done</Stepper.Completed>
+          <Stepper.Completed>
+            Thank you for Registration ... Waiting for redirection
+          </Stepper.Completed>
         </Stepper>
 
         <Group position="center" mt="xl">
           <Button variant="default" onClick={decreaseStep}>
             Back
           </Button>
-          {active < 3 ? (
+          {active === 2 ? (
             <Button type="submit">Sign up</Button>
           ) : (
             <Button type="button" onClick={handleNext}>
