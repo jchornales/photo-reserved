@@ -1,5 +1,6 @@
 import React from 'react';
 import { z } from 'zod';
+import { UseFormReturn } from 'react-hook-form';
 import { userSignUpSchema, userSignInSchema } from '../Validations/initialize';
 
 export type BaseLayout = {
@@ -22,6 +23,12 @@ export type City = {
   type: string;
 };
 
+export type Municipality = {
+  code: string;
+  name: string;
+  provinceCode: string;
+};
+
 export type Barangay = {
   code: string;
   name: string;
@@ -32,6 +39,7 @@ export type Barangay = {
 export type ProvinceForm = {
   value: string;
   label: string;
+  code: string;
 };
 
 export type CityForm = {
@@ -44,4 +52,8 @@ export type CityForm = {
 export type BarangayForm = {
   value: string;
   label: string;
+};
+
+export type FormProps = {
+  form: UseFormReturn<FormData>;
 };

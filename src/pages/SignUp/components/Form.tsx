@@ -1,58 +1,63 @@
 /* eslint-disable react/jsx-no-bind */
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useState } from 'react';
-import { useForm, SubmitHandler } from 'react-hook-form';
+import { useForm, SubmitHandler, Path } from 'react-hook-form';
 import { Stepper, Button, Group, Container } from '@mantine/core';
 import { FormData } from '../../../config/Types/initialize';
 import { userSignUpSchema } from '../../../config/Validations/initialize';
-import InfoField from './InfoField';
-import UserAuth from './UserAuth';
+import { useStepperFormStore } from '../../../config/StateManagement/initialize';
+import InfoField from './UserInfoFields';
+import UserAuth from './UserAuthFields';
 import AddressFields from './AddressFields';
 
 export default function Form() {
-  const {
-    control,
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<FormData>({
+  const form = useForm<FormData>({
     resolver: zodResolver(userSignUpSchema),
   });
-  const [active, setActive] = useState(0);
-
-  function nextStep() {
-    setActive((current) => (current < 3 ? current + 1 : current));
-  }
-  function prevStep() {
-    setActive((current) => (current > 0 ? current - 1 : current));
-  }
+  const { handleSubmit, trigger, getValues, setError } = form;
 
   const onSubmit: SubmitHandler<FormData> = (data) => console.log(data);
+  const [{ active, target, increaseStep, decreaseStep }] = useStepperFormStore(
+    (state) => [state]
+  );
+
+  const handleNext = async () => {
+    const passwordMatch =
+      getValues('password') === getValues('passwordConfirmation');
+    if (await trigger(target[active] as unknown as Path<FormData>)) {
+      if (passwordMatch) {
+        increaseStep();
+      }
+      setError('passwordConfirmation', { message: "Password doesn't match" });
+    }
+  };
 
   return (
     <Container size={600}>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Stepper active={active} onStepClick={setActive} breakpoint="sm">
+        <Stepper active={active} breakpoint="sm">
           <Stepper.Step label="First step" description="Create an account">
-            <UserAuth errors={errors} register={register} />
+            <UserAuth form={form} />
           </Stepper.Step>
           <Stepper.Step label="Second step" description="Personal Information">
-            <InfoField errors={errors} register={register} />
+            <InfoField form={form} />
           </Stepper.Step>
           <Stepper.Step label="Final step" description="Get full access">
-            <AddressFields control={control} register={register} />
-            <button type="submit">Submit</button>
+            <AddressFields form={form} />
           </Stepper.Step>
           <Stepper.Completed>Done</Stepper.Completed>
         </Stepper>
 
         <Group position="center" mt="xl">
-          <Button variant="default" onClick={prevStep}>
+          <Button variant="default" onClick={decreaseStep}>
             Back
           </Button>
-          <Button type="button" onClick={nextStep}>
-            Next step
-          </Button>
+          {active < 3 ? (
+            <Button type="submit">Sign up</Button>
+          ) : (
+            <Button type="button" onClick={handleNext}>
+              Next step
+            </Button>
+          )}
         </Group>
       </form>
     </Container>

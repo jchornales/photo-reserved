@@ -67,14 +67,14 @@ export function GetProvinces(): ProvinceForm[] | undefined {
     error,
   } = useQuery<Province[], Error>(['province'], fetchProvinces);
   if (isSuccess) {
-    const newProvinces = provinces
+    const sortedProvinces = provinces
       .map((item: Province) => {
-        return { value: item.code, label: item.name };
+        return { value: item.name, label: item.name, code: item.code };
       })
       .sort((first: ProvinceForm, second: ProvinceForm) =>
         first.label < second.label ? -1 : 1
       );
-    return newProvinces;
+    return sortedProvinces;
   }
   if (isError) {
     throw new Error(`${error}`);
@@ -94,19 +94,19 @@ export function GetCities(code: string | null): CityForm[] | undefined {
   });
 
   if (isSuccess) {
-    const newCities = cities
+    const sortedCities = cities
       .map((item: City): CityForm => {
         return {
-          value: item.code,
+          value: item.name,
           label: item.name,
-          code: item.provinceCode,
+          code: item.code,
           type: item.type,
         };
       })
       .sort((first: CityForm, second: CityForm) =>
         first.label < second.label ? -1 : 1
       );
-    return newCities;
+    return sortedCities;
   }
   if (isError) {
     throw new Error(`${error}`);
@@ -129,14 +129,14 @@ export function GetBarangays(
   });
 
   if (isSuccess) {
-    const newCities = barangay
+    const sortedBarangay = barangay
       .map((item: Barangay): BarangayForm => {
-        return { value: item.code, label: item.name };
+        return { value: item.name, label: item.name };
       })
       .sort((first: BarangayForm, second: BarangayForm) =>
         first.label < second.label ? -1 : 1
       );
-    return newCities;
+    return sortedBarangay;
   }
   if (isError) {
     throw new Error(`${error}`);

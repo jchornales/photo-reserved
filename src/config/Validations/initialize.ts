@@ -7,8 +7,8 @@ export const userSignUpSchema = z
     last_name: z.string().min(1, 'Last Name is required'),
     email: z.string().email({ message: 'Invalid Email address' }),
     province: z.string().min(1, 'Province is required'),
-    city: z.string(),
-    barangay: z.string(),
+    city: z.string().min(1, 'City is required'),
+    barangay: z.string().min(1, 'Barangay is required'),
     address: z.string(),
     phone: z.string(),
     password: z
@@ -25,7 +25,5 @@ export const userSignUpSchema = z
 
 export const userSignInSchema = z.object({
   email: z.string().email({ message: 'Invalid email address' }),
-  password: z
-    .string()
-    .min(6, { message: 'Password Must be more than 6 character' }),
+  password: z.string().min(6, { message: 'Password must matched' }),
 });

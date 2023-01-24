@@ -19,7 +19,9 @@ export default function createUser(data: FormData) {
           first_name: data.first_name,
           last_name: data.last_name,
           phone: data.phone,
-          address: data.address,
+          province: data.address,
+          city: data.city,
+          barangay: data.barangay,
         });
         console.log('Document written with ID:', docRef.id);
       } catch (error) {

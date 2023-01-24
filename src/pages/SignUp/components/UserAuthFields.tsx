@@ -1,13 +1,12 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import { ErrorMessage } from '@hookform/error-message';
 import { Input, PasswordInput, TextInput } from '@mantine/core';
-import { FieldErrorsImpl, UseFormRegister } from 'react-hook-form';
+import { UseFormReturn } from 'react-hook-form';
 import { Path } from 'react-hook-form/dist/types';
 import { FormData } from '../../../config/Types/initialize';
 
 type Props = {
-  register: UseFormRegister<FormData>;
-  errors: FieldErrorsImpl<FormData>;
+  form: UseFormReturn<FormData>;
 };
 
 const SignUpFields = [
@@ -32,7 +31,11 @@ const SignUpFields = [
   },
 ];
 
-export default function UserAuth({ register, errors }: Props) {
+export default function UserAuth({ form }: Props) {
+  const {
+    register,
+    formState: { errors },
+  } = form;
   return (
     <>
       {SignUpFields.map((field) => {
