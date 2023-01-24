@@ -22,6 +22,8 @@ export default function createUser(data: FormData) {
           province: data.address,
           city: data.city,
           barangay: data.barangay,
+          address: data.address,
+          user_type: data.user_type,
         });
         console.log('Document written with ID:', docRef.id);
       } catch (error) {

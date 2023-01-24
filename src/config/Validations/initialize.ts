@@ -5,6 +5,7 @@ export const userSignUpSchema = z
   .object({
     first_name: z.string().min(1, 'First Name is required'),
     last_name: z.string().min(1, 'Last Name is required'),
+    user_type: z.string().min(1, 'User Type is required'),
     email: z.string().email({ message: 'Invalid Email address' }),
     province: z.string().min(1, 'Province is required'),
     city: z.string().min(1, 'City is required'),

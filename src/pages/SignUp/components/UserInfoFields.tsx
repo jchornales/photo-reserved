@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import { Input, TextInput } from '@mantine/core';
-import { UseFormReturn, Path } from 'react-hook-form';
+import { Input, Select, TextInput } from '@mantine/core';
+import { UseFormReturn, Path, Controller } from 'react-hook-form';
 import { ErrorMessage } from '@hookform/error-message';
 import { FormData } from '../../../config/Types/initialize';
 
@@ -28,6 +28,7 @@ const SignUpFields = [
 
 export default function InfoField({ form }: Props) {
   const {
+    control,
     register,
     formState: { errors },
   } = form;
@@ -48,6 +49,21 @@ export default function InfoField({ form }: Props) {
           />
         </div>
       ))}
+      <Controller
+        control={control}
+        name="user_type"
+        render={({ field }) => (
+          <Select
+            label="User Type"
+            placeholder="Select User Type "
+            searchable
+            clearable
+            withAsterisk
+            data={['Client', 'Photographer']}
+            {...field}
+          />
+        )}
+      />
     </>
   );
 }
