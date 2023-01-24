@@ -1,66 +1,65 @@
-/* eslint-disable no-console */
-/* eslint-disable react/jsx-props-no-spreading */
-import { Box, Button, Group, TextInput } from '@mantine/core';
-import { useForm, zodResolver } from '@mantine/form';
-import { userSchema } from '../../../config/Validations/initialize';
+/* eslint-disable react/jsx-no-bind */
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm, SubmitHandler, Path } from 'react-hook-form';
+import { Stepper, Button, Group, Container } from '@mantine/core';
+import { FormData } from '../../../config/Types/initialize';
+import { userSignUpSchema } from '../../../config/Validations/initialize';
+import { useStepperFormStore } from '../../../config/StateManagement/initialize';
+import InfoField from './UserInfoFields';
+import UserAuth from './UserAuthFields';
 import AddressFields from './AddressFields';
 
 export default function Form() {
-  const form = useForm({
-    initialValues: {
-      first_name: '',
-      last_name: '',
-      email: '',
-      address: '',
-      password: '',
-      passwordConfirmation: '',
-      province: '',
-    },
-    validate: zodResolver(userSchema),
+  const form = useForm<FormData>({
+    resolver: zodResolver(userSignUpSchema),
   });
+  const { handleSubmit, trigger, getValues, setError } = form;
+
+  const onSubmit: SubmitHandler<FormData> = (data) => console.log(data);
+  const [{ active, target, increaseStep, decreaseStep }] = useStepperFormStore(
+    (state) => [state]
+  );
+
+  const handleNext = async () => {
+    const passwordMatch =
+      getValues('password') === getValues('passwordConfirmation');
+    if (await trigger(target[active] as unknown as Path<FormData>)) {
+      if (passwordMatch) {
+        increaseStep();
+      }
+      setError('passwordConfirmation', { message: "Password doesn't match" });
+    }
+  };
 
   return (
-    <Box sx={{ maxWidth: 340 }} mx="auto">
-      <form onSubmit={form.onSubmit((values) => console.log(values))}>
-        <TextInput
-          withAsterisk
-          label="First Name"
-          placeholder="Example: Johnny Balboa"
-          {...form.getInputProps('first_name')}
-        />
-        <TextInput
-          withAsterisk
-          label="Last Name"
-          placeholder="Example: Dela Cruz"
-          {...form.getInputProps('last_name')}
-        />
-        <TextInput
-          label="Email Address"
-          placeholder="Example: johnnybalboadelacruz@gmail.com"
-          withAsterisk
-          mt="md"
-          {...form.getInputProps('email')}
-        />
-        <AddressFields form={form} />
-        <TextInput
-          label="Password"
-          type="password"
-          placeholder="**********"
-          mt="md"
-          {...form.getInputProps('password')}
-        />
-        <TextInput
-          label="Confirm Password"
-          type="password"
-          placeholder="**********"
-          mt="md"
-          {...form.getInputProps('passwordConfirmation')}
-        />
+    <Container size={600}>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Stepper active={active} breakpoint="sm">
+          <Stepper.Step label="First step" description="Create an account">
+            <UserAuth form={form} />
+          </Stepper.Step>
+          <Stepper.Step label="Second step" description="Personal Information">
+            <InfoField form={form} />
+          </Stepper.Step>
+          <Stepper.Step label="Final step" description="Get full access">
+            <AddressFields form={form} />
+          </Stepper.Step>
+          <Stepper.Completed>Done</Stepper.Completed>
+        </Stepper>
 
-        <Group position="right" mt="xl">
-          <Button type="submit">Submit</Button>
+        <Group position="center" mt="xl">
+          <Button variant="default" onClick={decreaseStep}>
+            Back
+          </Button>
+          {active < 3 ? (
+            <Button type="submit">Sign up</Button>
+          ) : (
+            <Button type="button" onClick={handleNext}>
+              Next step
+            </Button>
+          )}
         </Group>
       </form>
-    </Box>
+    </Container>
   );
 }

@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@emotion/react": "^11.10.5",
+    "@hookform/error-message": "^2.0.1",
     "@hookform/resolvers": "^2.9.10",
     "@mantine/core": "^5.10.1",
     "@mantine/form": "^5.10.1",
@@ -19,12 +20,14 @@
     "axios": "^1.2.3",
     "firebase": "^9.15.0",
     "firebase-tools": "^11.20.0",
+    "lodash": "^4.17.21",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-firebase-hooks": "^5.1.1",
     "react-hook-form": "^7.42.1",
     "react-router-dom": "^6.7.0",
-    "zod": "^3.20.2"
+    "zod": "^3.20.2",
+    "zustand": "^4.3.2"
   },
   "devDependencies": {
     "@types/react": "^18.0.26",

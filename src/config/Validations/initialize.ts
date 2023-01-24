@@ -1,16 +1,16 @@
 /* eslint-disable import/prefer-default-export */
 import { z } from 'zod';
 
-export const userSchema = z
+export const userSignUpSchema = z
   .object({
     first_name: z.string().min(1, 'First Name is required'),
     last_name: z.string().min(1, 'Last Name is required'),
     email: z.string().email({ message: 'Invalid Email address' }),
-    province: z.string().min(1, 'Last Name is required'),
-    city: z.string(),
-    // barangay: z.string(),
+    province: z.string().min(1, 'Province is required'),
+    city: z.string().min(1, 'City is required'),
+    barangay: z.string().min(1, 'Barangay is required'),
     address: z.string(),
-    // phone: z.string(),
+    phone: z.string(),
     password: z
       .string()
       .min(6, { message: 'Password Must be more than 6 character' }),
@@ -25,7 +25,5 @@ export const userSchema = z
 
 export const userSignInSchema = z.object({
   email: z.string().email({ message: 'Invalid email address' }),
-  password: z
-    .string()
-    .min(6, { message: 'Password Must be more than 6 character' }),
+  password: z.string().min(6, { message: 'Password must matched' }),
 });

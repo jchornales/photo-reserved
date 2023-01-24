@@ -1,89 +1,32 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/jsx-props-no-spreading */
-import { Select, TextInput } from '@mantine/core';
-import { UseFormReturnType } from '@mantine/form';
-import { useState } from 'react';
-import { GetBarangays, GetCities, GetProvinces } from '../../../api/GetPMCB';
-import { CityForm, FormData } from '../../../config/Types/initialize';
+import { TextInput } from '@mantine/core';
+import { GetBarangays, GetCities, GetProvinces } from '../../../api/GetPMCBT';
+import { useAddressFieldStore } from '../../../config/StateManagement/initialize';
+import { FormProps } from '../../../config/Types/initialize';
+import BarangayField from './BarangayField';
+import CityField from './CityField';
+import ProvinceField from './ProvinceField';
 
-type Props = { form: UseFormReturnType<FormData> };
-
-export default function AddressFields({ form }: Props) {
-  const [currentProvince, setCurrentProvince] = useState('');
-  const [currentCity, setCurrentCity] = useState<CityForm | undefined>();
+export default function AddressFields({ form }: FormProps) {
+  const { register, control } = form;
+  const [{ currentProvinceCode, currentCityCode }] = useAddressFieldStore(
+    (state) => [state]
+  );
   const provinces = GetProvinces();
-  const cities = GetCities(currentProvince);
-  const barangays = GetBarangays(currentCity?.value, currentCity?.type);
+  const cities = GetCities(currentProvinceCode);
+  const barangays = GetBarangays(currentCityCode[0], currentCityCode[1]);
 
-  function getCurrentCityData(citycode: string) {
-    const filtered = cities?.find((city) => city.value === citycode);
-    setCurrentCity(filtered);
-  }
   return (
     <>
-      {provinces && (
-        <Select
-          label="Province"
-          placeholder="Select Province"
-          searchable
-          clearable
-          withAsterisk
-          onChange={(provinceCode) => {
-            if (provinceCode) {
-              form.setFieldValue('province', provinceCode);
-              form.setFieldValue('city', '');
-              setCurrentProvince(provinceCode);
-            }
-          }}
-          data={provinces}
-        />
-      )}
-      {currentProvince && cities ? (
-        <Select
-          label="City / Municipality"
-          placeholder="Select City / Municipality"
-          searchable
-          clearable
-          onChange={(cityCode) => {
-            if (cityCode) {
-              form.setFieldValue('city', cityCode);
-              getCurrentCityData(cityCode);
-            }
-          }}
-          data={cities}
-        />
-      ) : (
-        <Select
-          disabled
-          value=""
-          label="City / Municipality"
-          placeholder="Select City / Municipality"
-          data={[]}
-        />
-      )}
-      {currentCity && barangays ? (
-        <Select
-          label="Barangay"
-          placeholder="Select Barangay"
-          searchable
-          clearable
-          data={barangays}
-        />
-      ) : (
-        <Select
-          disabled
-          label="Barangay"
-          placeholder="Select Barangay"
-          data={[]}
-          {...form.getInputProps('address')}
-        />
-      )}
-
+      <ProvinceField form={form} provinces={provinces} />
+      <CityField form={form} cities={cities} />
+      <BarangayField form={form} barangays={barangays} />
       <TextInput
         label="Address"
         placeholder="Example: Blk 7 Lot 9 Rafaela Homes"
         mt="md"
-        {...form.getInputProps('address')}
+        {...register('address')}
       />
     </>
   );
