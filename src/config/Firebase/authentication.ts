@@ -1,31 +1,32 @@
 /* eslint-disable no-console */
 import {
   createUserWithEmailAndPassword,
+  GoogleAuthProvider,
+  onAuthStateChanged,
   signInWithEmailAndPassword,
+  signInWithPopup,
 } from 'firebase/auth';
 import { addDoc, collection } from 'firebase/firestore';
 import { auth } from './initialize';
-import { database } from './fetchData';
+import { database } from './handleData';
 import { FormData, SignInForm } from '../Types/initialize';
 
 export default function createUser(data: FormData) {
   createUserWithEmailAndPassword(auth, data.email, data.password)
     .then(async (userCredential) => {
       const { user } = userCredential;
-      console.log(user);
       try {
-        const docRef = await addDoc(collection(database, 'customers'), {
-          user_uid: user.uid,
-          first_name: data.first_name,
-          last_name: data.last_name,
-          phone: data.phone,
-          province: data.address,
-          city: data.city,
-          barangay: data.barangay,
-          address: data.address,
-          user_type: data.user_type,
-        });
-        console.log('Document written with ID:', docRef.id);
+        // const docRef = await addDoc(collection(database, 'customers'), {
+        //   user_uid: user.uid,
+        //   displayName: `${data.first_name} ${data.last_name}`,
+        //   phone: data.phone,
+        //   province: data.address,
+        //   city: data.city,
+        //   barangay: data.barangay,
+        //   address: data.address,
+        //   user_type: data.user_type,
+        // });
+        // console.log('Document written with ID: ', docRef.id);
       } catch (error) {
         console.error('Error adding document: ', error);
       }
@@ -43,11 +44,47 @@ export function signInUser(data: SignInForm) {
       // Signed in
       const { user } = userCredential;
       // ...
-      console.log(user);
     })
     .catch((error) => {
       const errorCode = error?.code;
       const errorMessage = error?.message;
       console.log(`${errorCode} : ${errorMessage}`);
+    });
+}
+
+export function signInWithGoogle() {
+  const provider = new GoogleAuthProvider();
+  provider.addScope('https://www.googleapis.com/auth/userinfo.profile');
+  signInWithPopup(auth, provider)
+    .then(async (result) => {
+      // This gives you a Google Access Token. You can use it to access the Google API.
+      const credential = GoogleAuthProvider.credentialFromResult(result);
+      const token = credential?.accessToken;
+      const user = result.user;
+      try {
+        const docRef = await addDoc(collection(database, 'customers'), {
+          user_uid: user.uid,
+          displayName: user.displayName,
+          phone: '',
+          province: '',
+          city: '',
+          barangay: '',
+          address: '',
+          user_type: '',
+        });
+      } catch (error) {
+        console.error('Error adding document: ', error);
+      }
+    })
+    .catch((error) => {
+      // Handle Errors here.
+      const errorCode = error.code;
+      console.log(errorCode);
+      const errorMessage = error.message;
+      // The email of the user's account used.
+      const email = error.customData.email;
+      // The AuthCredential type that was used.
+      const credential = GoogleAuthProvider.credentialFromError(error);
+      // ...
     });
 }

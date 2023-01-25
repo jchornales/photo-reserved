@@ -2,7 +2,7 @@
 import { Input, Select, TextInput } from '@mantine/core';
 import { UseFormReturn, Path, Controller } from 'react-hook-form';
 import { ErrorMessage } from '@hookform/error-message';
-import { FormData } from '../../../config/Types/initialize';
+import { FormData } from '../../../../config/Types/initialize';
 
 type Props = {
   form: UseFormReturn<FormData>;

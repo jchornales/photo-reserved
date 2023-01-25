@@ -1,15 +1,17 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable react/jsx-props-no-spreading */
 import { TextInput } from '@mantine/core';
-import { GetBarangays, GetCities, GetProvinces } from '../../../api/GetPMCBT';
-import { useAddressFieldStore } from '../../../config/StateManagement/initialize';
-import { FormProps } from '../../../config/Types/initialize';
-import BarangayField from './BarangayField';
-import CityField from './CityField';
-import ProvinceField from './ProvinceField';
+import {
+  GetBarangays,
+  GetCities,
+  GetProvinces,
+} from '../../../../api/GetPMCBT';
+import { useAddressFieldStore } from '../../../../config/StateManagement/initialize';
+import { FormProps } from '../../../../config/Types/initialize';
+import BarangayField from '../BarangayField';
+import CityField from '../CityField';
+import ProvinceField from '../ProvinceField';
 
 export default function AddressFields({ form }: FormProps) {
-  const { register, control } = form;
+  const { register } = form;
   const [{ currentProvinceCode, currentCityCode }] = useAddressFieldStore(
     (state) => [state]
   );
