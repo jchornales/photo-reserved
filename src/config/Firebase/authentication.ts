@@ -1,8 +1,9 @@
 /* eslint-disable no-console */
 import {
   createUserWithEmailAndPassword,
+  FacebookAuthProvider,
+  GithubAuthProvider,
   GoogleAuthProvider,
-  onAuthStateChanged,
   signInWithEmailAndPassword,
   signInWithPopup,
 } from 'firebase/auth';
@@ -85,6 +86,78 @@ export function signInWithGoogle() {
       const email = error.customData.email;
       // The AuthCredential type that was used.
       const credential = GoogleAuthProvider.credentialFromError(error);
+      // ...
+    });
+}
+
+export function signInWithGithub() {
+  const provider = new GithubAuthProvider();
+  signInWithPopup(auth, provider)
+    .then(async (result) => {
+      // This gives you a Google Access Token. You can use it to access the Google API.
+      const credential = GithubAuthProvider.credentialFromResult(result);
+      const token = credential?.accessToken;
+      const user = result.user;
+      try {
+        const docRef = await addDoc(collection(database, 'customers'), {
+          user_uid: user.uid,
+          displayName: user.displayName,
+          phone: '',
+          province: '',
+          city: '',
+          barangay: '',
+          address: '',
+          user_type: '',
+        });
+      } catch (error) {
+        console.error('Error adding document: ', error);
+      }
+    })
+    .catch((error) => {
+      // Handle Errors here.
+      const errorCode = error.code;
+      console.log(errorCode);
+      const errorMessage = error.message;
+      // The email of the user's account used.
+      const email = error.customData.email;
+      // The AuthCredential type that was used.
+      const credential = GithubAuthProvider.credentialFromError(error);
+      // ...
+    });
+}
+
+export function signInWithFacebook() {
+  const provider = new FacebookAuthProvider();
+  signInWithPopup(auth, provider)
+    .then(async (result) => {
+      // This gives you a Google Access Token. You can use it to access the Google API.
+      const credential = FacebookAuthProvider.credentialFromResult(result);
+      const token = credential?.accessToken;
+      const user = result.user;
+      try {
+        const docRef = await addDoc(collection(database, 'customers'), {
+          user_uid: user.uid,
+          displayName: user.displayName,
+          phone: '',
+          province: '',
+          city: '',
+          barangay: '',
+          address: '',
+          user_type: '',
+        });
+      } catch (error) {
+        console.error('Error adding document: ', error);
+      }
+    })
+    .catch((error) => {
+      // Handle Errors here.
+      const errorCode = error.code;
+      console.log(errorCode);
+      const errorMessage = error.message;
+      // The email of the user's account used.
+      const email = error.customData.email;
+      // The AuthCredential type that was used.
+      const credential = GithubAuthProvider.credentialFromError(error);
       // ...
     });
 }

@@ -4,6 +4,7 @@ import {
   faTwitter,
   faGoogle,
   faFacebook,
+  faGithub,
 } from '@fortawesome/free-brands-svg-icons';
 import { ErrorMessage } from '@hookform/error-message';
 import {
@@ -18,7 +19,11 @@ import {
 import { UseFormReturn } from 'react-hook-form';
 import { Path } from 'react-hook-form/dist/types';
 import { FormData } from '../../../../config/Types/initialize';
-import { signInWithGoogle } from '../../../../config/Firebase/authentication';
+import {
+  signInWithFacebook,
+  signInWithGithub,
+  signInWithGoogle,
+} from '../../../../config/Firebase/authentication';
 
 type Props = {
   form: UseFormReturn<FormData>;
@@ -65,16 +70,18 @@ export default function UserAuth({ form }: Props) {
           Google
         </Button>
         <Button
-          leftIcon={<FontAwesomeIcon icon={faFacebook} />}
+          leftIcon={<FontAwesomeIcon icon={faGithub} />}
           variant="default"
+          onClick={signInWithGithub}
         >
-          Facebook
+          Github
         </Button>
         <Button
-          leftIcon={<FontAwesomeIcon icon={faTwitter} />}
+          leftIcon={<FontAwesomeIcon icon={faFacebook} />}
           variant="default"
+          onClick={signInWithFacebook}
         >
-          Twitter
+          Facebook
         </Button>
       </Group>
 
