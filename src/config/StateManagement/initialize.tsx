@@ -1,5 +1,4 @@
 import { create } from 'zustand';
-import { ProvinceForm } from '../Types/initialize';
 
 type AddressFieldsState = {
   currentProvinceCode: string;
@@ -13,6 +12,11 @@ type StepperState = {
   target: string[][];
   increaseStep: () => void;
   decreaseStep: () => void;
+};
+
+type AuthState = {
+  isLoggedIn: boolean;
+  setIsLoggedIn: () => void;
 };
 
 export const useAddressFieldStore = create<AddressFieldsState>((set) => ({
@@ -38,4 +42,9 @@ export const useStepperFormStore = create<StepperState>((set) => ({
     set((state) => ({
       active: state.active > 0 ? state.active - 1 : state.active,
     })),
+}));
+
+export const useAuthStore = create<AuthState>((set) => ({
+  isLoggedIn: false,
+  setIsLoggedIn: () => set((state) => ({ isLoggedIn: !state.isLoggedIn })),
 }));

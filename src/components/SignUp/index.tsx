@@ -2,21 +2,41 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm, SubmitHandler, Path } from 'react-hook-form';
 import { Stepper, Button, Group, Container } from '@mantine/core';
-import { FormData } from '../../../config/Types/initialize';
-import { userSignUpSchema } from '../../../config/Validations/initialize';
-import { useStepperFormStore } from '../../../config/StateManagement/initialize';
-import InfoField from './UserInfoFields';
-import UserAuth from './UserAuthFields';
-import AddressFields from './AddressFields';
-import { isEmailDuplicate } from '../../../config/Firebase/fetchData';
+import { userSignUpSchema } from '../../config/Validations/initialize';
+import createUser from '../../config/Firebase/authentication';
+import {
+  useAuthStore,
+  useStepperFormStore,
+} from '../../config/StateManagement/initialize';
+import { isEmailDuplicate } from '../../config/Firebase/handleData';
+import UserAuth from './components/UserAuthFields';
+import InfoField from './components/UserInfoFields';
+import { FormData } from '../../config/Types/initialize';
+import AddressFields from './components/AddressFields';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from '../../config/Firebase/initialize';
 
-export default function Form() {
+export default function SignUpForm() {
   const form = useForm<FormData>({
     resolver: zodResolver(userSignUpSchema),
   });
-  const { handleSubmit, trigger, getValues, setError } = form;
+  const { handleSubmit, trigger, getValues, setError, watch } = form;
+  const navigate = useNavigate();
 
-  const onSubmit: SubmitHandler<FormData> = (data) => console.log(data);
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        navigate('/client');
+      }
+    });
+  }, [watch]);
+
+  const onSubmit: SubmitHandler<FormData> = async (data: FormData) => {
+    createUser(data);
+  };
+
   const [{ active, target, increaseStep, decreaseStep }] = useStepperFormStore(
     (state) => [state]
   );
