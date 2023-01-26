@@ -16,7 +16,11 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../../config/Firebase/initialize';
 import AuthProviderButtons from '../AuthProviderButtons';
 
-export default function SignUpForm() {
+type Props = {
+  type: string;
+};
+
+export default function SignUpForm({ type }: Props) {
   const [isRegisterWithEmail, setIsRegisterWithEmail] = useState(false);
   const form = useForm<FormData>({
     resolver: zodResolver(userSignUpSchema),
@@ -33,7 +37,7 @@ export default function SignUpForm() {
   }, [watch]);
 
   const onSubmit: SubmitHandler<FormData> = async (data: FormData) => {
-    createUser(data);
+    createUser(data, type);
   };
 
   const [{ active, target, increaseStep, decreaseStep }] = useStepperFormStore(
@@ -112,7 +116,7 @@ export default function SignUpForm() {
           <Text size="lg" weight={500}>
             Sign in to Photo Reserved
           </Text>
-          <AuthProviderButtons />
+          <AuthProviderButtons type={type} />
           <Button
             fullWidth
             onClick={() => setIsRegisterWithEmail((state) => !state)}

@@ -39,7 +39,7 @@ export default function SignIn() {
       <Text size="lg" weight={500}>
         Sign in to Photo Reserved
       </Text>
-      <AuthProviderButtons />
+      <AuthProviderButtons type={null} />
       <form onSubmit={handleSubmit(onSubmit)}>
         <TextInput
           withAsterisk

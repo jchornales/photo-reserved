@@ -5,35 +5,38 @@ import {
   faGithub,
 } from '@fortawesome/free-brands-svg-icons';
 
-import { Button, Divider, Group, Text } from '@mantine/core';
+import { Button, Divider, Group } from '@mantine/core';
 import {
   signInWithFacebook,
   signInWithGithub,
   signInWithGoogle,
 } from '../../config/Firebase/authentication';
 
-export default function AuthProviderButtons() {
+type Props = {
+  type: string | null;
+};
+export default function AuthProviderButtons({ type }: Props) {
   return (
     <>
       <Group grow mb="md" mt="md">
         <Button
           leftIcon={<FontAwesomeIcon icon={faGoogle} />}
           variant="default"
-          onClick={signInWithGoogle}
+          onClick={() => signInWithGoogle(type)}
         >
           Google
         </Button>
         <Button
           leftIcon={<FontAwesomeIcon icon={faGithub} />}
           variant="default"
-          onClick={signInWithGithub}
+          onClick={() => signInWithGithub(type)}
         >
           Github
         </Button>
         <Button
           leftIcon={<FontAwesomeIcon icon={faFacebook} />}
           variant="default"
-          onClick={signInWithFacebook}
+          onClick={() => signInWithFacebook(type)}
         >
           Facebook
         </Button>

@@ -7,12 +7,12 @@ import {
   signInWithEmailAndPassword,
   signInWithPopup,
 } from 'firebase/auth';
-import { addDoc, collection } from 'firebase/firestore';
+import { addDoc, collection, getDoc, doc } from 'firebase/firestore';
 import { auth } from './initialize';
-import { database } from './handleData';
+import { database, isUserDataDuplicate } from './handleData';
 import { FormData, SignInForm } from '../Types/initialize';
 
-export default function createUser(data: FormData) {
+export default function createUser(data: FormData, type: string) {
   createUserWithEmailAndPassword(auth, data.email, data.password)
     .then(async (userCredential) => {
       const { user } = userCredential;
@@ -25,7 +25,7 @@ export default function createUser(data: FormData) {
           city: data.city,
           barangay: data.barangay,
           address: data.address,
-          user_type: data.user_type,
+          user_type: type,
         });
         console.log('Document written with ID: ', docRef.id);
       } catch (error) {
@@ -53,26 +53,28 @@ export function signInUser(data: SignInForm) {
     });
 }
 
-export function signInWithGoogle() {
+export function signInWithGoogle(type: string | null) {
   const provider = new GoogleAuthProvider();
   provider.addScope('https://www.googleapis.com/auth/userinfo.profile');
   signInWithPopup(auth, provider)
     .then(async (result) => {
-      // This gives you a Google Access Token. You can use it to access the Google API.
       const credential = GoogleAuthProvider.credentialFromResult(result);
       const token = credential?.accessToken;
       const user = result.user;
+      const isUserExist = await isUserDataDuplicate(user.uid);
       try {
-        const docRef = await addDoc(collection(database, 'customers'), {
-          user_uid: user.uid,
-          displayName: user.displayName,
-          phone: '',
-          province: '',
-          city: '',
-          barangay: '',
-          address: '',
-          user_type: '',
-        });
+        if (type !== null && isUserExist === false) {
+          await addDoc(collection(database, 'customers'), {
+            user_uid: user.uid,
+            displayName: user.displayName,
+            phone: '',
+            province: '',
+            city: '',
+            barangay: '',
+            address: '',
+            user_type: type === 'client' ? 'client' : 'photographer',
+          });
+        }
       } catch (error) {
         console.error('Error adding document: ', error);
       }
@@ -90,7 +92,7 @@ export function signInWithGoogle() {
     });
 }
 
-export function signInWithGithub() {
+export function signInWithGithub(type: string | null) {
   const provider = new GithubAuthProvider();
   signInWithPopup(auth, provider)
     .then(async (result) => {
@@ -98,17 +100,20 @@ export function signInWithGithub() {
       const credential = GithubAuthProvider.credentialFromResult(result);
       const token = credential?.accessToken;
       const user = result.user;
+      const isUserExist = await isUserDataDuplicate(user.uid);
       try {
-        const docRef = await addDoc(collection(database, 'customers'), {
-          user_uid: user.uid,
-          displayName: user.displayName,
-          phone: '',
-          province: '',
-          city: '',
-          barangay: '',
-          address: '',
-          user_type: '',
-        });
+        if (type !== null && isUserExist === false) {
+          const docRef = await addDoc(collection(database, 'customers'), {
+            user_uid: user.uid,
+            displayName: user.displayName,
+            phone: '',
+            province: '',
+            city: '',
+            barangay: '',
+            address: '',
+            user_type: type === 'client' ? 'client' : 'photographer',
+          });
+        }
       } catch (error) {
         console.error('Error adding document: ', error);
       }
@@ -126,7 +131,7 @@ export function signInWithGithub() {
     });
 }
 
-export function signInWithFacebook() {
+export function signInWithFacebook(type: string | null) {
   const provider = new FacebookAuthProvider();
   signInWithPopup(auth, provider)
     .then(async (result) => {
@@ -134,17 +139,20 @@ export function signInWithFacebook() {
       const credential = FacebookAuthProvider.credentialFromResult(result);
       const token = credential?.accessToken;
       const user = result.user;
+      const isUserExist = await isUserDataDuplicate(user.uid);
       try {
-        const docRef = await addDoc(collection(database, 'customers'), {
-          user_uid: user.uid,
-          displayName: user.displayName,
-          phone: '',
-          province: '',
-          city: '',
-          barangay: '',
-          address: '',
-          user_type: '',
-        });
+        if (type !== null && isUserExist === false) {
+          const docRef = await addDoc(collection(database, 'customers'), {
+            user_uid: user.uid,
+            displayName: user.displayName,
+            phone: '',
+            province: '',
+            city: '',
+            barangay: '',
+            address: '',
+            user_type: type === 'client' ? 'client' : 'photographer',
+          });
+        }
       } catch (error) {
         console.error('Error adding document: ', error);
       }
