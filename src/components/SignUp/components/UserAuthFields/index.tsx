@@ -1,29 +1,11 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faTwitter,
-  faGoogle,
-  faFacebook,
-  faGithub,
-} from '@fortawesome/free-brands-svg-icons';
+
 import { ErrorMessage } from '@hookform/error-message';
-import {
-  Button,
-  Divider,
-  Group,
-  Input,
-  PasswordInput,
-  Text,
-  TextInput,
-} from '@mantine/core';
+import { Input, PasswordInput, TextInput, Text } from '@mantine/core';
 import { UseFormReturn } from 'react-hook-form';
 import { Path } from 'react-hook-form/dist/types';
 import { FormData } from '../../../../config/Types/initialize';
-import {
-  signInWithFacebook,
-  signInWithGithub,
-  signInWithGoogle,
-} from '../../../../config/Firebase/authentication';
+import AuthProviderButtons from '../../../AuthProviderButtons';
 
 type Props = {
   form: UseFormReturn<FormData>;
@@ -58,35 +40,6 @@ export default function UserAuth({ form }: Props) {
   } = form;
   return (
     <>
-      <Text size="md" weight={500}>
-        Sign up with
-      </Text>
-      <Group grow mb="md" mt="md">
-        <Button
-          leftIcon={<FontAwesomeIcon icon={faGoogle} />}
-          variant="default"
-          onClick={signInWithGoogle}
-        >
-          Google
-        </Button>
-        <Button
-          leftIcon={<FontAwesomeIcon icon={faGithub} />}
-          variant="default"
-          onClick={signInWithGithub}
-        >
-          Github
-        </Button>
-        <Button
-          leftIcon={<FontAwesomeIcon icon={faFacebook} />}
-          variant="default"
-          onClick={signInWithFacebook}
-        >
-          Facebook
-        </Button>
-      </Group>
-
-      <Divider label="Or continue with email" labelPosition="center" my="lg" />
-
       {SignUpFields.map((field) => {
         return (
           <div key={field.name}>

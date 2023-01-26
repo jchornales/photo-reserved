@@ -5,28 +5,64 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { SignInForm } from '../../config/Types/initialize';
 import { userSignInSchema } from '../../config/Validations/initialize';
 import { signInUser } from '../../config/Firebase/authentication';
+import { ErrorMessage } from '@hookform/error-message';
+import { Text, TextInput, Input, PasswordInput, Button } from '@mantine/core';
+import { useEffect } from 'react';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from '../../config/Firebase/initialize';
+import { useNavigate } from 'react-router-dom';
+import AuthProviderButtons from '../AuthProviderButtons';
 
 export default function SignIn() {
+  const navigate = useNavigate();
   const {
     handleSubmit,
     register,
+    watch,
     formState: { errors },
   } = useForm<SignInForm>({
     resolver: zodResolver(userSignInSchema),
   });
 
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        navigate('/client');
+      }
+    });
+  }, [watch]);
+
   const onSubmit: SubmitHandler<SignInForm> = (data) => signInUser(data);
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <label htmlFor="email">Email</label>
-      <input {...register('email')} />
-      <p>{errors.email?.message}</p>
+    <>
+      <Text size="lg" weight={500}>
+        Sign in to Photo Reserved
+      </Text>
+      <AuthProviderButtons />
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <TextInput
+          withAsterisk
+          label="Email Address"
+          placeholder="Example: johnnybalboabeneventura@gmail.com"
+          {...register('email')}
+        />
+        <ErrorMessage
+          errors={errors}
+          name="email"
+          render={({ message }) => <Input.Error>{message}</Input.Error>}
+        />
 
-      <label htmlFor="password">Password</label>
-      <input type="password" {...register('password')} />
-      <p>{errors.password?.message}</p>
-      <button type="submit">Sign In</button>
-    </form>
+        <PasswordInput
+          withAsterisk
+          label="Password"
+          placeholder="password"
+          {...register('password')}
+        />
+        <Button fullWidth type="submit">
+          Sign In
+        </Button>
+      </form>
+    </>
   );
 }
