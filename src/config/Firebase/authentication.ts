@@ -17,17 +17,17 @@ export default function createUser(data: FormData) {
     .then(async (userCredential) => {
       const { user } = userCredential;
       try {
-        // const docRef = await addDoc(collection(database, 'customers'), {
-        //   user_uid: user.uid,
-        //   displayName: `${data.first_name} ${data.last_name}`,
-        //   phone: data.phone,
-        //   province: data.address,
-        //   city: data.city,
-        //   barangay: data.barangay,
-        //   address: data.address,
-        //   user_type: data.user_type,
-        // });
-        // console.log('Document written with ID: ', docRef.id);
+        const docRef = await addDoc(collection(database, 'customers'), {
+          user_uid: user.uid,
+          displayName: `${data.first_name} ${data.last_name}`,
+          phone: data.phone,
+          province: data.address,
+          city: data.city,
+          barangay: data.barangay,
+          address: data.address,
+          user_type: data.user_type,
+        });
+        console.log('Document written with ID: ', docRef.id);
       } catch (error) {
         console.error('Error adding document: ', error);
       }
