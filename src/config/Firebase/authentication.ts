@@ -56,18 +56,18 @@ export default function processUser(
   }
   if (provider) {
     let emailProvider = new GoogleAuthProvider();
-
-    if (provider === 'google') {
-      emailProvider = new GoogleAuthProvider();
-      emailProvider.addScope(
-        'https://www.googleapis.com/auth/userinfo.profile'
-      );
-    }
-    if (provider === 'facebook') {
-      emailProvider = new FacebookAuthProvider();
-    }
-    if (provider === 'github') {
-      emailProvider = new GithubAuthProvider();
+    switch (provider) {
+      case 'google':
+        emailProvider = new GoogleAuthProvider();
+        emailProvider.addScope(
+          'https://www.googleapis.com/auth/userinfo.profile'
+        );
+        break;
+      case 'facebook':
+        emailProvider = new FacebookAuthProvider();
+        break;
+      case 'github':
+        emailProvider = new GithubAuthProvider();
     }
 
     signInWithPopup(auth, emailProvider)
@@ -82,23 +82,14 @@ export default function processUser(
       .catch((error) => {
         const errorCode = error.code;
         console.log(errorCode);
-        const errorMessage = error.message;
-        const email = error.customData.email;
-        const credential = GoogleAuthProvider.credentialFromError(error);
       });
   }
 }
 
 export function signInUser(data: SignInForm) {
-  signInWithEmailAndPassword(auth, data.email, data.password)
-    .then((userCredential) => {
-      // Signed in
-      const { user } = userCredential;
-      // ...
-    })
-    .catch((error) => {
-      const errorCode = error?.code;
-      const errorMessage = error?.message;
-      console.log(`${errorCode} : ${errorMessage}`);
-    });
+  signInWithEmailAndPassword(auth, data.email, data.password).catch((error) => {
+    const errorCode = error?.code;
+    const errorMessage = error?.message;
+    console.log(`${errorCode} : ${errorMessage}`);
+  });
 }
