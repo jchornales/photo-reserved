@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { persist, devtools, createJSONStorage } from 'zustand/middleware';
 
 type AddressFieldsState = {
   currentProvinceCode: string;
@@ -16,7 +17,12 @@ type StepperState = {
 
 type AuthState = {
   isLoggedIn: boolean;
-  setIsLoggedIn: () => void;
+  setIsLoggedIn: (status: boolean) => void;
+};
+
+type UserTypeState = {
+  userType: string;
+  setUserType: (type: string) => void;
 };
 
 type RegisterTypeState = {
@@ -51,8 +57,23 @@ export const useStepperFormStore = create<StepperState>((set) => ({
 
 export const useAuthStore = create<AuthState>((set) => ({
   isLoggedIn: false,
-  setIsLoggedIn: () => set((state) => ({ isLoggedIn: !state.isLoggedIn })),
+  setIsLoggedIn: (status: boolean) => set(() => ({ isLoggedIn: status })),
 }));
+
+export const useUserTypeStore = create<UserTypeState>()(
+  devtools(
+    persist(
+      (set) => ({
+        userType: '',
+        setUserType: (type: string) => set({ userType: type }),
+      }),
+      {
+        name: 'user-type-storage',
+        storage: createJSONStorage(() => sessionStorage),
+      }
+    )
+  )
+);
 
 export const useRegisterTypeStore = create<RegisterTypeState>((set) => ({
   isRegisterWithEmail: false,

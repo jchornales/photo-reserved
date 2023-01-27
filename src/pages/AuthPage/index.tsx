@@ -1,4 +1,4 @@
-import { Anchor, Paper, PaperProps, Container, Stack } from '@mantine/core';
+import { Anchor, Paper, PaperProps, Container } from '@mantine/core';
 import { useToggle } from '@mantine/hooks';
 import SignIn from '../../components/SignIn';
 import SignUpType from './components/SignUpType';
