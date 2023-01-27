@@ -7,36 +7,24 @@ import { useEffect } from 'react';
 
 function App() {
   const navigate = useNavigate();
-  const [{ isLoggedIn, setIsLoggedIn }] = useAuthStore((state) => [state]);
-
-  useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setIsLoggedIn();
-      } else {
-        setIsLoggedIn();
-      }
-    });
-  }, []);
 
   return (
     <div className="App">
       <Link to="/login">Login</Link>
-      {isLoggedIn && (
-        <Button
-          onClick={() => {
-            signOut(auth)
-              .then(() => {
-                navigate('/login');
-              })
-              .catch((error) => {
-                console.log(error);
-              });
-          }}
-        >
-          Logout
-        </Button>
-      )}
+
+      <Button
+        onClick={() => {
+          signOut(auth)
+            .then(() => {
+              navigate('/login');
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        }}
+      >
+        Logout
+      </Button>
     </div>
   );
 }

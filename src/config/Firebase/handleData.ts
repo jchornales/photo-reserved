@@ -10,7 +10,7 @@ import { fetchSignInMethodsForEmail } from 'firebase/auth';
 export const database = getFirestore(firebaseApp);
 
 export default async function getCustomers(db: Firestore) {
-  const customer = collection(db, 'customer');
+  const customer = collection(db, 'usersData');
   const customerSnapshot = await getDocs(customer);
   const customerList = customerSnapshot.docs.map((doc) => doc.data());
   return customerList;
@@ -27,9 +27,7 @@ export async function isEmailDuplicate(email: string) {
 }
 
 export async function isUserDataDuplicate(userId: string) {
-  const users = collection(database, 'customers');
-  const usersSnapshot = await getDocs(users);
-  const usersList = usersSnapshot.docs.map((doc) => doc.data());
+  const usersList = await getCustomers(database);
   const isUserExist = usersList.find((user) => user.user_uid === userId);
   if (isUserExist) {
     return true;

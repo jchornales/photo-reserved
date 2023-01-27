@@ -1,11 +1,10 @@
 /* eslint-disable react/jsx-props-no-spreading */
 
 import { ErrorMessage } from '@hookform/error-message';
-import { Input, PasswordInput, TextInput, Text } from '@mantine/core';
+import { Input, PasswordInput, TextInput, Stack } from '@mantine/core';
 import { UseFormReturn } from 'react-hook-form';
 import { Path } from 'react-hook-form/dist/types';
 import { FormData } from '../../../../config/Types/initialize';
-import AuthProviderButtons from '../../../AuthProviderButtons';
 
 type Props = {
   form: UseFormReturn<FormData>;
@@ -39,7 +38,7 @@ export default function UserAuth({ form }: Props) {
     formState: { errors },
   } = form;
   return (
-    <>
+    <Stack>
       {SignUpFields.map((field) => {
         return (
           <div key={field.name}>
@@ -67,6 +66,6 @@ export default function UserAuth({ form }: Props) {
           </div>
         );
       })}
-    </>
+    </Stack>
   );
 }

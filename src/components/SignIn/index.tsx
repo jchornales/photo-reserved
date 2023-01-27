@@ -1,20 +1,29 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable react/jsx-props-no-spreading */
+import { useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { SignInForm } from '../../config/Types/initialize';
 import { userSignInSchema } from '../../config/Validations/initialize';
 import { signInUser } from '../../config/Firebase/authentication';
 import { ErrorMessage } from '@hookform/error-message';
-import { Text, TextInput, Input, PasswordInput, Button } from '@mantine/core';
-import { useEffect } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../../config/Firebase/initialize';
 import { useNavigate } from 'react-router-dom';
 import AuthProviderButtons from '../AuthProviderButtons';
+import {
+  Text,
+  TextInput,
+  Input,
+  PasswordInput,
+  Button,
+  Stack,
+} from '@mantine/core';
+import { useAuthStore } from '../../config/StateManagement/initialize';
 
 export default function SignIn() {
   const navigate = useNavigate();
+  const [{ setIsLoggedIn }] = useAuthStore((state) => [state]);
   const {
     handleSubmit,
     register,
@@ -27,6 +36,7 @@ export default function SignIn() {
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
+        setIsLoggedIn();
         navigate('/client');
       }
     });
@@ -41,27 +51,29 @@ export default function SignIn() {
       </Text>
       <AuthProviderButtons type={null} />
       <form onSubmit={handleSubmit(onSubmit)}>
-        <TextInput
-          withAsterisk
-          label="Email Address"
-          placeholder="Example: johnnybalboabeneventura@gmail.com"
-          {...register('email')}
-        />
-        <ErrorMessage
-          errors={errors}
-          name="email"
-          render={({ message }) => <Input.Error>{message}</Input.Error>}
-        />
+        <Stack>
+          <TextInput
+            withAsterisk
+            label="Email Address"
+            placeholder="Example: johnnybalboabeneventura@gmail.com"
+            {...register('email')}
+          />
+          <ErrorMessage
+            errors={errors}
+            name="email"
+            render={({ message }) => <Input.Error>{message}</Input.Error>}
+          />
 
-        <PasswordInput
-          withAsterisk
-          label="Password"
-          placeholder="password"
-          {...register('password')}
-        />
-        <Button fullWidth type="submit">
-          Sign In
-        </Button>
+          <PasswordInput
+            withAsterisk
+            label="Password"
+            placeholder="password"
+            {...register('password')}
+          />
+          <Button fullWidth type="submit">
+            Sign In
+          </Button>
+        </Stack>
       </form>
     </>
   );

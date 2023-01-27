@@ -6,40 +6,30 @@ import {
 } from '@fortawesome/free-brands-svg-icons';
 
 import { Button, Divider, Group } from '@mantine/core';
-import {
-  signInWithFacebook,
-  signInWithGithub,
-  signInWithGoogle,
-} from '../../config/Firebase/authentication';
+import processUser from '../../config/Firebase/authentication';
 
 type Props = {
   type: string | null;
 };
 export default function AuthProviderButtons({ type }: Props) {
+  const providerButton = [
+    { icon: faGoogle, provider: 'google', label: 'Google' },
+    { icon: faGithub, provider: 'github', label: 'Github' },
+    { icon: faFacebook, provider: 'facebook', label: 'Facebook' },
+  ];
   return (
     <>
       <Group grow mb="md" mt="md">
-        <Button
-          leftIcon={<FontAwesomeIcon icon={faGoogle} />}
-          variant="default"
-          onClick={() => signInWithGoogle(type)}
-        >
-          Google
-        </Button>
-        <Button
-          leftIcon={<FontAwesomeIcon icon={faGithub} />}
-          variant="default"
-          onClick={() => signInWithGithub(type)}
-        >
-          Github
-        </Button>
-        <Button
-          leftIcon={<FontAwesomeIcon icon={faFacebook} />}
-          variant="default"
-          onClick={() => signInWithFacebook(type)}
-        >
-          Facebook
-        </Button>
+        {providerButton.map((button) => (
+          <Button
+            key={button.provider}
+            leftIcon={<FontAwesomeIcon icon={button.icon} />}
+            variant="default"
+            onClick={() => processUser(null, type, button.provider)}
+          >
+            {button.label}
+          </Button>
+        ))}
       </Group>
       <Divider label="Or continue with email" labelPosition="center" my="lg" />
     </>

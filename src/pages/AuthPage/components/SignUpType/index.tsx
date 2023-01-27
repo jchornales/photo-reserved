@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import { Button } from '@mantine/core';
+import { Button, Stack } from '@mantine/core';
 import SignUpForm from '../../../../components/SignUp';
 
 export default function SignUpType() {
   const [type, setType] = useState('');
   return (
-    <>
+    <Stack>
       {!type && (
         <>
           <Button onClick={() => setType('client')}>Client</Button>
@@ -14,6 +14,6 @@ export default function SignUpType() {
       )}
 
       {type && <SignUpForm type={type} />}
-    </>
+    </Stack>
   );
 }

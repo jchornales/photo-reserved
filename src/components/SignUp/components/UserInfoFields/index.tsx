@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import { Input, TextInput } from '@mantine/core';
+import { Input, TextInput, Stack } from '@mantine/core';
 import { UseFormReturn, Path } from 'react-hook-form';
 import { ErrorMessage } from '@hookform/error-message';
 import { FormData } from '../../../../config/Types/initialize';
@@ -28,12 +28,11 @@ const SignUpFields = [
 
 export default function InfoField({ form }: Props) {
   const {
-    control,
     register,
     formState: { errors },
   } = form;
   return (
-    <>
+    <Stack>
       {SignUpFields.map((field) => (
         <div key={field.name}>
           <TextInput
@@ -49,6 +48,6 @@ export default function InfoField({ form }: Props) {
           />
         </div>
       ))}
-    </>
+    </Stack>
   );
 }

@@ -19,6 +19,11 @@ type AuthState = {
   setIsLoggedIn: () => void;
 };
 
+type RegisterTypeState = {
+  isRegisterWithEmail: boolean;
+  setIsRegisterWithEmail: () => void;
+};
+
 export const useAddressFieldStore = create<AddressFieldsState>((set) => ({
   currentProvinceCode: '',
   setCurrentProvince: (code) => set(() => ({ currentProvinceCode: code })),
@@ -47,4 +52,10 @@ export const useStepperFormStore = create<StepperState>((set) => ({
 export const useAuthStore = create<AuthState>((set) => ({
   isLoggedIn: false,
   setIsLoggedIn: () => set((state) => ({ isLoggedIn: !state.isLoggedIn })),
+}));
+
+export const useRegisterTypeStore = create<RegisterTypeState>((set) => ({
+  isRegisterWithEmail: false,
+  setIsRegisterWithEmail: () =>
+    set((state) => ({ isRegisterWithEmail: !state.isRegisterWithEmail })),
 }));

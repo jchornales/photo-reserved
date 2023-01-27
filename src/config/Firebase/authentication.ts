@@ -6,37 +6,87 @@ import {
   GoogleAuthProvider,
   signInWithEmailAndPassword,
   signInWithPopup,
+  UserCredential,
 } from 'firebase/auth';
-import { addDoc, collection, getDoc, doc } from 'firebase/firestore';
+import { addDoc, collection } from 'firebase/firestore';
 import { auth } from './initialize';
 import { database, isUserDataDuplicate } from './handleData';
 import { FormData, SignInForm } from '../Types/initialize';
 
-export default function createUser(data: FormData, type: string) {
-  createUserWithEmailAndPassword(auth, data.email, data.password)
-    .then(async (userCredential) => {
-      const { user } = userCredential;
-      try {
-        const docRef = await addDoc(collection(database, 'customers'), {
-          user_uid: user.uid,
-          displayName: `${data.first_name} ${data.last_name}`,
-          phone: data.phone,
-          province: data.address,
-          city: data.city,
-          barangay: data.barangay,
-          address: data.address,
-          user_type: type,
-        });
-        console.log('Document written with ID: ', docRef.id);
-      } catch (error) {
-        console.error('Error adding document: ', error);
-      }
-    })
-    .catch((error) => {
-      const errorCode = error?.code;
-      const errorMessage = error?.message;
-      console.log(`${errorCode} : ${errorMessage}`);
-    });
+async function storeData(
+  data: FormData | null,
+  type: string | null,
+  userCredential: UserCredential
+) {
+  const { user } = userCredential;
+  try {
+    if (type !== null) {
+      const docRef = await addDoc(collection(database, 'usersData'), {
+        user_uid: user.uid,
+        displayName:
+          user.displayName || `${data?.first_name} ${data?.last_name}`,
+        phone: data?.phone || '',
+        province: data?.address || '',
+        city: data?.city || '',
+        barangay: data?.barangay || '',
+        address: data?.address || '',
+        user_type: type,
+      });
+    }
+  } catch (error) {
+    console.error('Error adding document: ', error);
+  }
+}
+
+export default function processUser(
+  data: FormData | null,
+  type: string | null,
+  provider: string | null
+) {
+  if (data && provider == null) {
+    createUserWithEmailAndPassword(auth, data.email, data.password)
+      .then((userCredential: UserCredential) =>
+        storeData(data, type, userCredential)
+      )
+      .catch((error) => {
+        const errorCode = error?.code;
+        const errorMessage = error?.message;
+        console.log(`${errorCode} : ${errorMessage}`);
+      });
+  }
+  if (provider) {
+    let emailProvider = new GoogleAuthProvider();
+
+    if (provider === 'google') {
+      emailProvider = new GoogleAuthProvider();
+      emailProvider.addScope(
+        'https://www.googleapis.com/auth/userinfo.profile'
+      );
+    }
+    if (provider === 'facebook') {
+      emailProvider = new FacebookAuthProvider();
+    }
+    if (provider === 'github') {
+      emailProvider = new GithubAuthProvider();
+    }
+
+    signInWithPopup(auth, emailProvider)
+      .then(async (userCredential) => {
+        const { user } = userCredential;
+        const isUserExist = await isUserDataDuplicate(user.uid);
+
+        if (isUserExist === false) {
+          storeData(null, 'client', userCredential);
+        }
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        console.log(errorCode);
+        const errorMessage = error.message;
+        const email = error.customData.email;
+        const credential = GoogleAuthProvider.credentialFromError(error);
+      });
+  }
 }
 
 export function signInUser(data: SignInForm) {
@@ -50,122 +100,5 @@ export function signInUser(data: SignInForm) {
       const errorCode = error?.code;
       const errorMessage = error?.message;
       console.log(`${errorCode} : ${errorMessage}`);
-    });
-}
-
-export function signInWithGoogle(type: string | null) {
-  const provider = new GoogleAuthProvider();
-  provider.addScope('https://www.googleapis.com/auth/userinfo.profile');
-  signInWithPopup(auth, provider)
-    .then(async (result) => {
-      const credential = GoogleAuthProvider.credentialFromResult(result);
-      const token = credential?.accessToken;
-      const user = result.user;
-      const isUserExist = await isUserDataDuplicate(user.uid);
-      try {
-        if (type !== null && isUserExist === false) {
-          await addDoc(collection(database, 'customers'), {
-            user_uid: user.uid,
-            displayName: user.displayName,
-            phone: '',
-            province: '',
-            city: '',
-            barangay: '',
-            address: '',
-            user_type: type === 'client' ? 'client' : 'photographer',
-          });
-        }
-      } catch (error) {
-        console.error('Error adding document: ', error);
-      }
-    })
-    .catch((error) => {
-      // Handle Errors here.
-      const errorCode = error.code;
-      console.log(errorCode);
-      const errorMessage = error.message;
-      // The email of the user's account used.
-      const email = error.customData.email;
-      // The AuthCredential type that was used.
-      const credential = GoogleAuthProvider.credentialFromError(error);
-      // ...
-    });
-}
-
-export function signInWithGithub(type: string | null) {
-  const provider = new GithubAuthProvider();
-  signInWithPopup(auth, provider)
-    .then(async (result) => {
-      // This gives you a Google Access Token. You can use it to access the Google API.
-      const credential = GithubAuthProvider.credentialFromResult(result);
-      const token = credential?.accessToken;
-      const user = result.user;
-      const isUserExist = await isUserDataDuplicate(user.uid);
-      try {
-        if (type !== null && isUserExist === false) {
-          const docRef = await addDoc(collection(database, 'customers'), {
-            user_uid: user.uid,
-            displayName: user.displayName,
-            phone: '',
-            province: '',
-            city: '',
-            barangay: '',
-            address: '',
-            user_type: type === 'client' ? 'client' : 'photographer',
-          });
-        }
-      } catch (error) {
-        console.error('Error adding document: ', error);
-      }
-    })
-    .catch((error) => {
-      // Handle Errors here.
-      const errorCode = error.code;
-      console.log(errorCode);
-      const errorMessage = error.message;
-      // The email of the user's account used.
-      const email = error.customData.email;
-      // The AuthCredential type that was used.
-      const credential = GithubAuthProvider.credentialFromError(error);
-      // ...
-    });
-}
-
-export function signInWithFacebook(type: string | null) {
-  const provider = new FacebookAuthProvider();
-  signInWithPopup(auth, provider)
-    .then(async (result) => {
-      // This gives you a Google Access Token. You can use it to access the Google API.
-      const credential = FacebookAuthProvider.credentialFromResult(result);
-      const token = credential?.accessToken;
-      const user = result.user;
-      const isUserExist = await isUserDataDuplicate(user.uid);
-      try {
-        if (type !== null && isUserExist === false) {
-          const docRef = await addDoc(collection(database, 'customers'), {
-            user_uid: user.uid,
-            displayName: user.displayName,
-            phone: '',
-            province: '',
-            city: '',
-            barangay: '',
-            address: '',
-            user_type: type === 'client' ? 'client' : 'photographer',
-          });
-        }
-      } catch (error) {
-        console.error('Error adding document: ', error);
-      }
-    })
-    .catch((error) => {
-      // Handle Errors here.
-      const errorCode = error.code;
-      console.log(errorCode);
-      const errorMessage = error.message;
-      // The email of the user's account used.
-      const email = error.customData.email;
-      // The AuthCredential type that was used.
-      const credential = GithubAuthProvider.credentialFromError(error);
-      // ...
     });
 }
