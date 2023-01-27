@@ -19,8 +19,9 @@ async function storeData(
   userCredential: UserCredential
 ) {
   const { user } = userCredential;
+  const isUserExist = await isUserDataDuplicate(user.uid);
   try {
-    if (type !== null) {
+    if (type !== null && isUserExist === false) {
       const docRef = await addDoc(collection(database, 'usersData'), {
         user_uid: user.uid,
         displayName:
@@ -72,12 +73,7 @@ export default function processUser(
 
     signInWithPopup(auth, emailProvider)
       .then(async (userCredential) => {
-        const { user } = userCredential;
-        const isUserExist = await isUserDataDuplicate(user.uid);
-
-        if (isUserExist === false) {
-          storeData(null, 'client', userCredential);
-        }
+        storeData(null, type, userCredential);
       })
       .catch((error) => {
         const errorCode = error.code;

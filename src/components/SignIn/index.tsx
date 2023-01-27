@@ -7,9 +7,6 @@ import { SignInForm } from '../../config/Types/initialize';
 import { userSignInSchema } from '../../config/Validations/initialize';
 import { signInUser } from '../../config/Firebase/authentication';
 import { ErrorMessage } from '@hookform/error-message';
-import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from '../../config/Firebase/initialize';
-import { useNavigate } from 'react-router-dom';
 import AuthProviderButtons from '../AuthProviderButtons';
 import {
   Text,
@@ -22,25 +19,14 @@ import {
 import { useAuthStore } from '../../config/StateManagement/initialize';
 
 export default function SignIn() {
-  const navigate = useNavigate();
-  const [{ setIsLoggedIn }] = useAuthStore((state) => [state]);
+  const [{ isLoggedIn, setIsLoggedIn }] = useAuthStore((state) => [state]);
   const {
     handleSubmit,
     register,
-    watch,
     formState: { errors },
   } = useForm<SignInForm>({
     resolver: zodResolver(userSignInSchema),
   });
-
-  useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setIsLoggedIn();
-        navigate('/client');
-      }
-    });
-  }, [watch]);
 
   const onSubmit: SubmitHandler<SignInForm> = (data) => signInUser(data);
 
