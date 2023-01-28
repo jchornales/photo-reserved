@@ -1,4 +1,4 @@
-import { Button } from '@mantine/core';
+import { Button, UnstyledButton } from '@mantine/core';
 import { Link, useNavigate } from 'react-router-dom';
 import { signOut } from 'firebase/auth';
 import { auth } from './config/Firebase/initialize';

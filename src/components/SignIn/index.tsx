@@ -15,11 +15,16 @@ import {
   PasswordInput,
   Button,
   Stack,
+  Container,
+  Paper,
+  Divider,
 } from '@mantine/core';
-import { useAuthStore } from '../../config/StateManagement/initialize';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faAt, faKey } from '@fortawesome/free-solid-svg-icons';
+import { PaperProps } from '@mantine/core/lib/Paper/Paper';
+import { useNavigate } from 'react-router-dom';
 
-export default function SignIn() {
-  const [{ isLoggedIn, setIsLoggedIn }] = useAuthStore((state) => [state]);
+export default function SignIn(props: PaperProps) {
   const {
     handleSubmit,
     register,
@@ -27,40 +32,53 @@ export default function SignIn() {
   } = useForm<SignInForm>({
     resolver: zodResolver(userSignInSchema),
   });
-
   const onSubmit: SubmitHandler<SignInForm> = (data) => signInUser(data);
-
+  const navigate = useNavigate();
   return (
-    <>
-      <Text size="lg" weight={500}>
-        Sign in to Photo Reserved
-      </Text>
-      <AuthProviderButtons type={null} />
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Stack>
-          <TextInput
-            withAsterisk
-            label="Email Address"
-            placeholder="Example: johnnybalboabeneventura@gmail.com"
-            {...register('email')}
-          />
-          <ErrorMessage
-            errors={errors}
-            name="email"
-            render={({ message }) => <Input.Error>{message}</Input.Error>}
-          />
+    <Container size={700}>
+      <Paper className="py-20 px-20" radius="md" p="xl" withBorder {...props}>
+        <Text className="text-3xl text-center mb-10 " weight={500}>
+          Sign in to Photo Reserved
+        </Text>
+        <AuthProviderButtons type={null} />
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <Stack>
+            <TextInput
+              withAsterisk
+              label="Email Address"
+              placeholder="Example: johnnybalboabeneventura@gmail.com"
+              icon={<FontAwesomeIcon icon={faAt} />}
+              {...register('email')}
+            />
+            <ErrorMessage
+              errors={errors}
+              name="email"
+              render={({ message }) => <Input.Error>{message}</Input.Error>}
+            />
 
-          <PasswordInput
-            withAsterisk
-            label="Password"
-            placeholder="password"
-            {...register('password')}
+            <PasswordInput
+              withAsterisk
+              label="Password"
+              placeholder="password"
+              icon={<FontAwesomeIcon icon={faKey} />}
+              {...register('password')}
+            />
+            <Button fullWidth type="submit">
+              Sign In
+            </Button>
+          </Stack>
+        </form>
+        <Stack>
+          <Divider
+            label="Don't have a Photo Reserved account?"
+            labelPosition="center"
+            my="lg"
           />
-          <Button fullWidth type="submit">
-            Sign In
+          <Button variant="default" onClick={() => navigate('/signup')}>
+            Sign Up
           </Button>
         </Stack>
-      </form>
-    </>
+      </Paper>
+    </Container>
   );
 }

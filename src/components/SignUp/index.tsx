@@ -1,60 +1,72 @@
-/* eslint-disable react/jsx-no-bind */
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm, SubmitHandler } from 'react-hook-form';
-import { Button, Text } from '@mantine/core';
-import { userSignUpSchema } from '../../config/Validations/initialize';
-import { FormData } from '../../config/Types/initialize';
-import { useEffect } from 'react';
+import {
+  Group,
+  UnstyledButton,
+  Text,
+  Paper,
+  Container,
+  Stack,
+  Button,
+  Divider,
+} from '@mantine/core';
+import { useState } from 'react';
+import { faImages, faCameraRetro } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import SignUpForm from './components/SignUpForm';
+import { PaperProps } from '@mantine/core/lib/Paper/Paper';
 import { useNavigate } from 'react-router-dom';
-import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from '../../config/Firebase/initialize';
-import AuthProviderButtons from '../AuthProviderButtons';
-import FormStepper from './components/FormStepper';
-import { useRegisterTypeStore } from '../../config/StateManagement/initialize';
-import processUser from '../../config/Firebase/authentication';
 
-type Props = {
-  type: string;
-};
-
-export default function SignUpForm({ type }: Props) {
-  const form = useForm<FormData>({
-    resolver: zodResolver(userSignUpSchema),
-  });
-  const { handleSubmit, watch } = form;
-  const [{ isRegisterWithEmail, setIsRegisterWithEmail }] =
-    useRegisterTypeStore((state) => [state]);
+export default function SignUp(props: PaperProps) {
+  const [type, setType] = useState('');
   const navigate = useNavigate();
 
-  const onSubmit: SubmitHandler<FormData> = async (data: FormData) => {
-    processUser(data, type, null);
-  };
-
-  useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        navigate(`/${type}`);
-      }
-    });
-  }, [watch]);
-
+  const options = [
+    {
+      label: "I'm a Client, hiring for an event",
+      icon: faImages,
+      value: 'client',
+    },
+    {
+      label: "I'm a Photographer, looking for work",
+      icon: faCameraRetro,
+      value: 'photographer',
+    },
+  ];
   return (
-    <>
-      {isRegisterWithEmail ? (
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <FormStepper form={form} />
-        </form>
-      ) : (
-        <>
-          <Text size="lg" weight={500}>
-            Sign in to Photo Reserved
-          </Text>
-          <AuthProviderButtons type={type} />
-          <Button fullWidth onClick={() => setIsRegisterWithEmail()}>
-            Continue with Email
-          </Button>
-        </>
-      )}
-    </>
+    <Container size={700}>
+      <Paper className="py-20 px-20" radius="md" p="xl" withBorder {...props}>
+        {!type && (
+          <>
+            <Text className="text-3xl text-center mb-10 ">
+              Join as a client or photographer
+            </Text>
+            <Group grow mb="md" mt="md">
+              {options.map((option) => (
+                <UnstyledButton
+                  className="py-10 px-5 border-2 border-solid border-gray-200 hover:border-emerald-600 hover:bg-emerald-50 rounded-2xl text-center"
+                  onClick={() => setType(option.value)}
+                >
+                  <Stack align="center">
+                    <FontAwesomeIcon icon={option.icon} size="lg" />
+                    <Text fz="xl" fw={500}>
+                      {option.label}
+                    </Text>
+                  </Stack>
+                </UnstyledButton>
+              ))}
+            </Group>
+
+            <Stack>
+              <Divider
+                label="Already have an account?"
+                labelPosition="center"
+                my="lg"
+              />
+              <Button onClick={() => navigate('/login')}>Sign In</Button>
+            </Stack>
+          </>
+        )}
+        {type && <SignUpForm type={type} />}
+      </Paper>
+    </Container>
   );
 }

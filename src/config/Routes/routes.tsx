@@ -2,7 +2,8 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { useEffect } from 'react';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import App from '../../App';
-import AuthPage from '../../pages/AuthPage';
+import SignIn from '../../components/SignIn';
+import SignUp from '../../components/SignUp';
 import CustomerPage from '../../pages/Customer';
 import Home from '../../pages/Home';
 import Photographer from '../../pages/Photographer';
@@ -40,7 +41,14 @@ export default function AppRouter() {
         <Route
           path="/login"
           element={
-            isLoggedIn ? <Navigate replace to={`/${userType}`} /> : <AuthPage />
+            isLoggedIn ? <Navigate replace to={`/${userType}`} /> : <SignIn />
+          }
+        />
+
+        <Route
+          path="/signup"
+          element={
+            isLoggedIn ? <Navigate replace to={`/${userType}`} /> : <SignUp />
           }
         />
 

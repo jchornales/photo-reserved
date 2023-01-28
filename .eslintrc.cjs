@@ -19,7 +19,14 @@ module.exports = {
     sourceType: 'module',
     project: './tsconfig.json',
   },
-  plugins: ['react', '@typescript-eslint', 'prettier', 'react-hooks'],
+  plugins: [
+    'react',
+    '@typescript-eslint',
+    'prettier',
+    'react-hooks',
+    'tailwindcss',
+    'postcss',
+  ],
   rules: {
     'react/react-in-jsx-scope': 0,
     'prettier/prettier': ['error', { endOfLine: 'auto' }],

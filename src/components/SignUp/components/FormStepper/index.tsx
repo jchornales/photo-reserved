@@ -53,7 +53,7 @@ export default function FormStepper({ form }: Props) {
         <Stepper.Step label="Second step" description="Personal Information">
           <InfoField form={form} />
         </Stepper.Step>
-        <Stepper.Step label="Final step" description="Get full access">
+        <Stepper.Step label="Final step" description="Address Information">
           <AddressFields form={form} />
         </Stepper.Step>
         <Stepper.Completed>
