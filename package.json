@@ -6,7 +6,10 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "tailwind": "npx tailwind -i ./src/index.css -o ./dist/tailwind.css --watch",
+    "test": "vitest",
+    "coveragee": "vitest run --coverage"
   },
   "dependencies": {
     "@emotion/react": "^11.10.5",

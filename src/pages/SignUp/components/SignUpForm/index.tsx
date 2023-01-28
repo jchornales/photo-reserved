@@ -10,8 +10,8 @@ import { useEffect } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../../../../config/Firebase/initialize';
 import FormStepper from '../FormStepper';
-import AuthProviderButtons from '../../../AuthProviderButtons';
 import { FormData } from '../../../../config/Types/initialize';
+import AuthProviderButtons from '../../../../components/AuthProviderButtons';
 
 type Props = {
   type: string;

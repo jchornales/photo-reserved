@@ -7,7 +7,6 @@ import { SignInForm } from '../../config/Types/initialize';
 import { userSignInSchema } from '../../config/Validations/initialize';
 import { signInUser } from '../../config/Firebase/authentication';
 import { ErrorMessage } from '@hookform/error-message';
-import AuthProviderButtons from '../AuthProviderButtons';
 import {
   Text,
   TextInput,
@@ -23,6 +22,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAt, faKey } from '@fortawesome/free-solid-svg-icons';
 import { PaperProps } from '@mantine/core/lib/Paper/Paper';
 import { useNavigate } from 'react-router-dom';
+import AuthProviderButtons from '../../components/AuthProviderButtons';
 
 export default function SignIn(props: PaperProps) {
   const {
