@@ -10,7 +10,7 @@ type Props = {
   form: UseFormReturn<FormData>;
 };
 
-const SignUpFields = [
+const fields = [
   {
     name: 'first_name',
     label: 'First Name',
@@ -38,7 +38,7 @@ export default function InfoField({ form }: Props) {
   } = form;
   return (
     <Stack>
-      {SignUpFields.map((field) => (
+      {fields.map((field) => (
         <div key={field.name}>
           <TextInput
             withAsterisk

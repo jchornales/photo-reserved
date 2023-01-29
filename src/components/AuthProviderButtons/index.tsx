@@ -11,16 +11,18 @@ import processUser from '../../config/Firebase/authentication';
 type Props = {
   type: string | null;
 };
+
+const buttons = [
+  { icon: faGoogle, provider: 'google', label: 'Google' },
+  { icon: faGithub, provider: 'github', label: 'Github' },
+  { icon: faFacebook, provider: 'facebook', label: 'Facebook' },
+];
+
 export default function AuthProviderButtons({ type }: Props) {
-  const providerButton = [
-    { icon: faGoogle, provider: 'google', label: 'Google' },
-    { icon: faGithub, provider: 'github', label: 'Github' },
-    { icon: faFacebook, provider: 'facebook', label: 'Facebook' },
-  ];
   return (
     <>
       <Group grow mb="md" mt="md">
-        {providerButton.map((button) => (
+        {buttons.map((button) => (
           <Button
             key={button.provider}
             leftIcon={<FontAwesomeIcon icon={button.icon} />}

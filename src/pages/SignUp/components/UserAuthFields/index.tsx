@@ -10,7 +10,7 @@ type Props = {
   form: UseFormReturn<FormData>;
 };
 
-const SignUpFields = [
+const fields = [
   {
     name: 'email',
     label: 'Email Address',
@@ -42,7 +42,7 @@ export default function UserAuth({ form }: Props) {
   } = form;
   return (
     <Stack>
-      {SignUpFields.map((field) => {
+      {fields.map((field) => {
         return (
           <div key={field.name}>
             {field.name === 'email' ? (
