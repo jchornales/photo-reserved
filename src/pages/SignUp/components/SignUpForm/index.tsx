@@ -6,12 +6,9 @@ import { userSignUpSchema } from '../../../../config/Validations/initialize';
 import { useRegisterTypeStore } from '../../../../config/StateManagement/initialize';
 import { useNavigate } from 'react-router-dom';
 import processUser from '../../../../config/Firebase/authentication';
-import { useEffect } from 'react';
-import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from '../../../../config/Firebase/initialize';
 import FormStepper from '../FormStepper';
-import { FormData } from '../../../../config/Types/initialize';
 import AuthProviderButtons from '../../../../components/AuthProviderButtons';
+import { FormData } from '../../../../config/Types/AuthForm';
 
 type Props = {
   type: string;
@@ -21,7 +18,7 @@ export default function SignUpForm({ type }: Props) {
   const form = useForm<FormData>({
     resolver: zodResolver(userSignUpSchema),
   });
-  const { handleSubmit, watch } = form;
+  const { handleSubmit } = form;
   const [{ isRegisterWithEmail, setIsRegisterWithEmail }] =
     useRegisterTypeStore((state) => [state]);
   const navigate = useNavigate();
@@ -29,14 +26,6 @@ export default function SignUpForm({ type }: Props) {
   const onSubmit: SubmitHandler<FormData> = async (data: FormData) => {
     processUser(data, type, null);
   };
-
-  useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        navigate(`/${type}`);
-      }
-    });
-  }, [watch]);
 
   return (
     <>
@@ -62,7 +51,7 @@ export default function SignUpForm({ type }: Props) {
         onClick={() => navigate('/login')}
         size="xs"
       >
-        Don't have an account? Register
+        Already have an account? <span className="text-blue-700">Login</span>
       </Anchor>
     </>
   );

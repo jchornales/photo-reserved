@@ -3,9 +3,10 @@ import { ErrorMessage } from '@hookform/error-message';
 import { Input, PasswordInput, TextInput, Stack } from '@mantine/core';
 import { UseFormReturn } from 'react-hook-form';
 import { Path } from 'react-hook-form/dist/types';
-import { FormData } from '../../../../config/Types/initialize';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAt, faKey } from '@fortawesome/free-solid-svg-icons';
+import { FormData } from '../../../../config/Types/AuthForm';
+
 type Props = {
   form: UseFormReturn<FormData>;
 };

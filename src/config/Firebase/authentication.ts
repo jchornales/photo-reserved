@@ -11,7 +11,7 @@ import {
 import { addDoc, collection } from 'firebase/firestore';
 import { auth } from './initialize';
 import { database, isUserDataDuplicate } from './handleData';
-import { FormData, SignInForm } from '../Types/initialize';
+import { FormData, SignInForm } from '../Types/Global';
 
 async function storeData(
   data: FormData | null,

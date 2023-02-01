@@ -7,7 +7,7 @@ import {
   CityForm,
   Barangay,
   BarangayForm,
-} from '../config/Types/initialize';
+} from '../config/Types/Global';
 
 async function fetchProvinces(): Promise<Province[]> {
   const data = await axios

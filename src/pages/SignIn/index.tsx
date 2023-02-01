@@ -1,9 +1,7 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable react/jsx-props-no-spreading */
-import { useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { SignInForm } from '../../config/Types/initialize';
 import { userSignInSchema } from '../../config/Validations/initialize';
 import { signInUser } from '../../config/Firebase/authentication';
 import { ErrorMessage } from '@hookform/error-message';
@@ -23,6 +21,7 @@ import { faAt, faKey } from '@fortawesome/free-solid-svg-icons';
 import { PaperProps } from '@mantine/core/lib/Paper/Paper';
 import { useNavigate } from 'react-router-dom';
 import AuthProviderButtons from '../../components/AuthProviderButtons';
+import { SignInForm } from '../../config/Types/AuthForm';
 
 export default function SignIn(props: PaperProps) {
   const {

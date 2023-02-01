@@ -1,11 +1,6 @@
-import React from 'react';
 import { z } from 'zod';
 import { UseFormReturn } from 'react-hook-form';
 import { userSignUpSchema, userSignInSchema } from '../Validations/initialize';
-
-export type BaseLayout = {
-  children?: React.ReactNode;
-};
 
 export type FormData = z.infer<typeof userSignUpSchema>;
 

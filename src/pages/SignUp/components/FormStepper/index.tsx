@@ -4,11 +4,11 @@ import UserAuth from '../UserAuthFields';
 import InfoField from '../UserInfoFields';
 import { Stepper, Button, Group } from '@mantine/core';
 import { UseFormReturn, Path } from 'react-hook-form';
-import { FormData } from '../../../../config/Types/initialize';
 import {
   useRegisterTypeStore,
   useStepperFormStore,
 } from '../../../../config/StateManagement/initialize';
+import { FormData } from '../../../../config/Types/AuthForm';
 
 type Props = {
   form: UseFormReturn<FormData>;
