@@ -1,5 +1,6 @@
 import {
   ActionIcon,
+  Button,
   Group,
   List,
   NumberInput,
@@ -13,9 +14,20 @@ import {
 import { useForm, Controller } from 'react-hook-form';
 import { AddPackageData } from '../../../../config/Types/PhotographerForm';
 import { UseFormReturn } from 'react-hook-form';
-import { ChangeEvent, useState } from 'react';
+import {
+  ChangeEvent,
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useState,
+} from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck, faPesoSign, faPlus } from '@fortawesome/free-solid-svg-icons';
+import {
+  faCheck,
+  faPesoSign,
+  faPlus,
+  faX,
+} from '@fortawesome/free-solid-svg-icons';
 
 type Props = {
   form: UseFormReturn<AddPackageData>;
@@ -92,31 +104,62 @@ function DynamicSelectField({ form }: Props) {
   );
 }
 
-type InclusionProps = {
+type ListsProps = {
   id: number | undefined;
   value: string;
 };
 
-function InclusionField() {
+type AddListFieldsProps = {
+  type: string;
+  setInclusions?: Dispatch<SetStateAction<ListsProps[]>>;
+  setExlusions?: Dispatch<SetStateAction<ListsProps[]>>;
+};
+
+function AddListFields({
+  type,
+  setInclusions,
+  setExlusions,
+}: AddListFieldsProps) {
   const [input, setInput] = useState('');
-  const [inclusions, setInclusions] = useState<InclusionProps[]>([]);
+  const [isEmpty, setIsEmpty] = useState(false);
+  const [lists, setLists] = useState<ListsProps[]>([]);
   const theme = useMantineTheme();
 
+  useEffect(() => {
+    if (setInclusions) {
+      setInclusions(lists);
+    }
+    if (setExlusions) {
+      setExlusions(lists);
+    }
+  }, [lists]);
+
   const handleClick = () => {
-    setInclusions((prevState) => {
-      return [...prevState, { id: inclusions?.length, value: input }];
-    });
-    console.log(inclusions);
+    if (input == '') {
+      setIsEmpty(true);
+    }
+    if (input != '') {
+      setLists((prevState: ListsProps[]): ListsProps[] => {
+        return [...prevState, { id: lists?.length, value: input }];
+      });
+    }
   };
 
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setInput(e.target.value);
+    if (input != '') {
+      setIsEmpty(false);
+    }
+  };
   return (
     <Stack>
       <TextInput
         withAsterisk
-        label="Inclusions"
+        label={type === 'inclusion' ? 'Inclusions' : 'Exclusions'}
         size="md"
         value={input}
-        onChange={(e) => setInput(e.target.value)}
+        onChange={handleInputChange}
+        error={isEmpty ? "Input field can't be empty" : false}
         rightSection={
           <ActionIcon
             size={32}
@@ -128,20 +171,27 @@ function InclusionField() {
             <FontAwesomeIcon icon={faPlus} />
           </ActionIcon>
         }
-        placeholder="Add inclusion services for package"
+        placeholder={`Add ${
+          type === 'inclusion' ? 'inclusion' : 'exlusion'
+        } services for package`}
         rightSectionWidth={42}
       />
       <List
+        withPadding
         spacing="xs"
-        size="sm"
+        size="md"
         center
         icon={
-          <ThemeIcon color="teal" size={24} radius="xl">
-            <FontAwesomeIcon icon={faCheck} />
+          <ThemeIcon
+            color={type === 'inclusion' ? 'teal' : 'red'}
+            size={24}
+            radius="xl"
+          >
+            <FontAwesomeIcon icon={type === 'inclusion' ? faCheck : faX} />
           </ThemeIcon>
         }
       >
-        {inclusions?.map((item) => {
+        {lists?.map((item) => {
           return <List.Item key={item.id}>{item.value}</List.Item>;
         })}
       </List>
@@ -151,14 +201,21 @@ function InclusionField() {
 
 export default function AddNewPackage() {
   const form = useForm<AddPackageData>();
+  const [inclusions, setInclusions] = useState<ListsProps[]>([]);
+  const [exlusions, setExlusions] = useState<ListsProps[]>([]);
+
   return (
     <Paper>
       <form>
         <Stack>
           <StaticInputFields form={form} />
           <DynamicSelectField form={form} />
-          <InclusionField />
+          <AddListFields type="inclusion" setInclusions={setInclusions} />
+          <AddListFields type="exclusion" setExlusions={setExlusions} />
         </Stack>
+        <Group position="right" mt="md">
+          <Button>Submit</Button>
+        </Group>
       </form>
     </Paper>
   );
