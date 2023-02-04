@@ -11,16 +11,14 @@ import {
   ThemeIcon,
   useMantineTheme,
 } from '@mantine/core';
-import { useForm, Controller } from 'react-hook-form';
-import { AddPackageData } from '../../../../config/Types/PhotographerForm';
-import { UseFormReturn } from 'react-hook-form';
+import { useForm, Controller, SubmitHandler } from 'react-hook-form';
 import {
-  ChangeEvent,
-  Dispatch,
-  SetStateAction,
-  useEffect,
-  useState,
-} from 'react';
+  AddListFieldsProps,
+  AddPackageData,
+  ListsProps,
+} from '../../../../config/Types/PhotographerForm';
+import { UseFormReturn } from 'react-hook-form';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faCheck,
@@ -28,6 +26,7 @@ import {
   faPlus,
   faX,
 } from '@fortawesome/free-solid-svg-icons';
+import { addPackage } from '../../../../config/Firebase/handlePhotographerData';
 
 type Props = {
   form: UseFormReturn<AddPackageData>;
@@ -49,7 +48,7 @@ function StaticInputFields({ form }: Props) {
         required
         label="Package Label"
         placeholder="Example: Debut Package A"
-        {...register('occasion')}
+        {...register('title')}
       />
       <Controller
         control={control}
@@ -104,17 +103,6 @@ function DynamicSelectField({ form }: Props) {
   );
 }
 
-type ListsProps = {
-  id: number | undefined;
-  value: string;
-};
-
-type AddListFieldsProps = {
-  type: string;
-  setInclusions?: Dispatch<SetStateAction<ListsProps[]>>;
-  setExlusions?: Dispatch<SetStateAction<ListsProps[]>>;
-};
-
 function AddListFields({
   type,
   setInclusions,
@@ -154,7 +142,6 @@ function AddListFields({
   return (
     <Stack>
       <TextInput
-        withAsterisk
         label={type === 'inclusion' ? 'Inclusions' : 'Exclusions'}
         size="md"
         value={input}
@@ -204,9 +191,15 @@ export default function AddNewPackage() {
   const [inclusions, setInclusions] = useState<ListsProps[]>([]);
   const [exlusions, setExlusions] = useState<ListsProps[]>([]);
 
+  const handleOnSubmit: SubmitHandler<AddPackageData> = (
+    data: AddPackageData
+  ) => {
+    addPackage(data, inclusions, exlusions);
+  };
+
   return (
     <Paper>
-      <form>
+      <form onSubmit={form.handleSubmit(handleOnSubmit)}>
         <Stack>
           <StaticInputFields form={form} />
           <DynamicSelectField form={form} />
@@ -214,7 +207,7 @@ export default function AddNewPackage() {
           <AddListFields type="exclusion" setExlusions={setExlusions} />
         </Stack>
         <Group position="right" mt="md">
-          <Button>Submit</Button>
+          <Button type="submit">Submit</Button>
         </Group>
       </form>
     </Paper>
