@@ -5,7 +5,7 @@ import {
   GetProvinces,
 } from '../../../../api/GetPMCBT';
 import { useAddressFieldStore } from '../../../../config/StateManagement/initialize';
-import { FormProps } from '../../../../config/Types/initialize';
+import { FormProps } from '../../../../config/Types/AuthForm';
 import BarangayField from '../BarangayField';
 import CityField from '../CityField';
 import ProvinceField from '../ProvinceField';

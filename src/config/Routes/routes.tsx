@@ -2,47 +2,28 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { useEffect } from 'react';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import App from '../../App';
+import NavigationBar from '../../components/NavigationBar';
 
 import CustomerPage from '../../pages/Customer';
 import Home from '../../pages/Home';
 import Photographer from '../../pages/Photographer';
 import SignIn from '../../pages/SignIn';
 import SignUp from '../../pages/SignUp';
-import { getCurrentUserData } from '../Firebase/handleData';
-import { auth } from '../Firebase/initialize';
 import { useAuthStore, useUserTypeStore } from '../StateManagement/initialize';
 
 export default function AppRouter() {
-  const [{ isLoggedIn, setIsLoggedIn }] = useAuthStore((state) => [state]);
-  const [{ userType, setUserType }] = useUserTypeStore((state) => [state]);
+  const [{ isLoggedIn }] = useAuthStore((state) => [state]);
+  const [{ userType }] = useUserTypeStore((state) => [state]);
 
-  useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setIsLoggedIn(true);
-        try {
-          getCurrentUserData().then((res) => {
-            if (res) {
-              setUserType(res.user_type);
-            }
-          });
-        } catch (e) {
-          console.error(e);
-        }
-      } else {
-        setIsLoggedIn(false);
-      }
-    });
-  }, [auth, isLoggedIn]);
   return (
     <BrowserRouter>
-      <App />
+      <NavigationBar />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route
           path="/login"
           element={
-            isLoggedIn ? <Navigate replace to={`/${userType}`} /> : <SignIn />
+            isLoggedIn ? <Navigate replace to={`/client`} /> : <SignIn />
           }
         />
 

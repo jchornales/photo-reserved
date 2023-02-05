@@ -8,15 +8,15 @@ import {
   Button,
   Divider,
 } from '@mantine/core';
-import { useState } from 'react';
 import { faImages, faCameraRetro } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import SignUpForm from './components/SignUpForm';
 import { PaperProps } from '@mantine/core/lib/Paper/Paper';
 import { useNavigate } from 'react-router-dom';
+import { useUserTypeStore } from '../../config/StateManagement/initialize';
 
 export default function SignUp(props: PaperProps) {
-  const [type, setType] = useState('');
+  const [{ userType, setUserType }] = useUserTypeStore((state) => [state]);
   const navigate = useNavigate();
 
   const options = [
@@ -34,7 +34,7 @@ export default function SignUp(props: PaperProps) {
   return (
     <Container size={700}>
       <Paper className="py-20 px-20" radius="md" p="xl" withBorder {...props}>
-        {!type && (
+        {userType === '' ? (
           <>
             <Text className="text-3xl text-center mb-10 ">
               Join as a client or photographer
@@ -42,8 +42,9 @@ export default function SignUp(props: PaperProps) {
             <Group grow mb="md" mt="md">
               {options.map((option) => (
                 <UnstyledButton
+                  key={option.value}
                   className="py-10 px-5 border-2 border-solid border-gray-200 hover:border-emerald-600 hover:bg-emerald-50 rounded-2xl text-center"
-                  onClick={() => setType(option.value)}
+                  onClick={() => setUserType(option.value)}
                 >
                   <Stack align="center">
                     <FontAwesomeIcon icon={option.icon} size="lg" />
@@ -64,8 +65,9 @@ export default function SignUp(props: PaperProps) {
               <Button onClick={() => navigate('/login')}>Sign In</Button>
             </Stack>
           </>
+        ) : (
+          <SignUpForm type={userType} />
         )}
-        {type && <SignUpForm type={type} />}
       </Paper>
     </Container>
   );

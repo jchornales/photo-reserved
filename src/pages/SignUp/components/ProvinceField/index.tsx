@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { Controller } from 'react-hook-form';
 import { UseFormReturn } from 'react-hook-form/dist/types';
 import { useAddressFieldStore } from '../../../../config/StateManagement/initialize';
-import { FormData, ProvinceForm } from '../../../../config/Types/initialize';
+import { FormData, ProvinceForm } from '../../../../config/Types/AuthForm';
 
 type Props = {
   form: UseFormReturn<FormData>;

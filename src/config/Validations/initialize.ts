@@ -27,3 +27,9 @@ export const userSignInSchema = z.object({
   email: z.string().email({ message: 'Invalid email address' }),
   password: z.string().min(6, { message: 'Password must matched' }),
 });
+
+export const photographerPackageSchema = z.object({
+  title: z.string().min(1, { message: 'Package Label is required' }),
+  occasion: z.string().min(1, { message: 'Occasion is required' }),
+  rate: z.number().min(1, { message: 'Rate is required' }),
+});

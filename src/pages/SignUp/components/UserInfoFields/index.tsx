@@ -2,9 +2,9 @@
 import { Input, TextInput, Stack } from '@mantine/core';
 import { UseFormReturn, Path } from 'react-hook-form';
 import { ErrorMessage } from '@hookform/error-message';
-import { FormData } from '../../../../config/Types/initialize';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faPhone } from '@fortawesome/free-solid-svg-icons';
+import { FormData } from '../../../../config/Types/AuthForm';
 
 type Props = {
   form: UseFormReturn<FormData>;

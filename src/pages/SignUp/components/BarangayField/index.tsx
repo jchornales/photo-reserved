@@ -1,7 +1,7 @@
 import { Select } from '@mantine/core';
 import { Controller } from 'react-hook-form';
 import { UseFormReturn } from 'react-hook-form/dist/types';
-import { BarangayForm, FormData } from '../../../../config/Types/initialize';
+import { BarangayForm, FormData } from '../../../../config/Types/AuthForm';
 
 type Props = {
   form: UseFormReturn<FormData>;
