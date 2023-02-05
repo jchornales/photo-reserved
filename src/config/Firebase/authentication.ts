@@ -23,15 +23,15 @@ async function storeData(
   try {
     if (type !== null && isUserExist === false) {
       const docRef = await addDoc(collection(database, 'usersData'), {
-        user_uid: user.uid,
+        user_type: type,
+        barangay: data?.barangay || '',
+        city: data?.city || '',
+        province: data?.address || '',
+        address: data?.address || '',
+        phone: data?.phone || '',
         displayName:
           user.displayName || `${data?.first_name} ${data?.last_name}`,
-        phone: data?.phone || '',
-        province: data?.address || '',
-        city: data?.city || '',
-        barangay: data?.barangay || '',
-        address: data?.address || '',
-        user_type: type,
+        user_uid: user.uid,
       });
     }
   } catch (error) {

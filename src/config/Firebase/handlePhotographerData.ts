@@ -10,12 +10,12 @@ export function addPackage(
 ) {
   const user = auth.currentUser;
   addDoc(collection(database, 'packages'), {
-    photographer_uid: user?.uid,
-    title: data.title,
-    occasion: data.occasion,
-    rate: data.rate,
     inclusions: inclusions,
     exclusions: exclusions,
+    rate: data.rate,
+    occasion: data.occasion,
+    title: data.title,
+    photographer_uid: user?.uid,
   });
   console.log(user);
 }

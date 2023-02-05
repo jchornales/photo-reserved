@@ -42,6 +42,7 @@ export default function SignUp(props: PaperProps) {
             <Group grow mb="md" mt="md">
               {options.map((option) => (
                 <UnstyledButton
+                  key={option.value}
                   className="py-10 px-5 border-2 border-solid border-gray-200 hover:border-emerald-600 hover:bg-emerald-50 rounded-2xl text-center"
                   onClick={() => setUserType(option.value)}
                 >

@@ -29,7 +29,7 @@ export const userSignInSchema = z.object({
 });
 
 export const photographerPackageSchema = z.object({
-  title: z.string().min(1, 'Package Label is required'),
-  occasion: z.string().min(1, 'Occasion is required'),
-  rate: z.number().min(1, 'Rate is required'),
+  title: z.string().min(1, { message: 'Package Label is required' }),
+  occasion: z.string().min(1, { message: 'Occasion is required' }),
+  rate: z.number().min(1, { message: 'Rate is required' }),
 });

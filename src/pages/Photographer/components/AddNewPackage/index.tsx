@@ -27,6 +27,8 @@ import {
   faX,
 } from '@fortawesome/free-solid-svg-icons';
 import { addPackage } from '../../../../config/Firebase/handlePhotographerData';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { photographerPackageSchema } from '../../../../config/Validations/initialize';
 
 type Props = {
   form: UseFormReturn<AddPackageData>;
@@ -41,14 +43,19 @@ const OccasionOptions = [
 ];
 
 function StaticInputFields({ form }: Props) {
-  const { register, control } = form;
+  const {
+    register,
+    control,
+    formState: { errors },
+  } = form;
   return (
-    <Group grow mb="md" mt="md">
+    <Group grow>
       <TextInput
-        required
+        withAsterisk
         label="Package Label"
         placeholder="Example: Debut Package A"
         {...register('title')}
+        error={errors.title?.message}
       />
       <Controller
         control={control}
@@ -64,9 +71,12 @@ function StaticInputFields({ form }: Props) {
                 ? `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
                 : ''
             }
-            defaultValue={0}
-            error={error && error.message}
+            min={0}
+            step={100}
+            decimalSeparator="."
+            precision={2}
             {...field}
+            error={error?.message}
           />
         )}
       />
@@ -81,14 +91,13 @@ function DynamicSelectField({ form }: Props) {
     <Controller
       control={control}
       name="occasion"
-      render={({ field }) => (
+      render={({ field, fieldState: { error } }) => (
         <Select
           label="Occasion"
           placeholder="Select Occasion / Add if not in the options"
           data={data}
           searchable
           creatable
-          clearable
           withAsterisk
           getCreateLabel={(query) => `+ Add ${query}`}
           onCreate={(query) => {
@@ -97,6 +106,7 @@ function DynamicSelectField({ form }: Props) {
             return item;
           }}
           {...field}
+          error={error?.message}
         />
       )}
     />
@@ -187,7 +197,14 @@ function AddListFields({
 }
 
 export default function AddNewPackage() {
-  const form = useForm<AddPackageData>();
+  const form = useForm<AddPackageData>({
+    resolver: zodResolver(photographerPackageSchema),
+    defaultValues: {
+      title: '',
+      occasion: '',
+      rate: 0,
+    },
+  });
   const [inclusions, setInclusions] = useState<ListsProps[]>([]);
   const [exlusions, setExlusions] = useState<ListsProps[]>([]);
 
